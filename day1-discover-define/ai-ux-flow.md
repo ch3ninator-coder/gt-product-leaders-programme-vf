@@ -72,3 +72,22 @@ If the four answers do not map cleanly to one of the six situations, or the pare
 - **Override / abandon rate:** the share who close the check and submit anyway. Above 15% means the check is seen as noise.
 - **False all-clear rate:** applications the check called complete that an officer still returned for a listed item. This must stay near zero; it is the number that breaks trust fastest.
 - **Edge-case routing accuracy:** the share of true edge cases correctly sent to an officer rather than answered. All numbers above are synthetic targets.
+
+## AI-UX readiness
+
+**Scenario:** B · ICA passport applications — parent renewing a child's passport, checked before Submit
+**Moment:** the ten seconds before a parent clicks Submit on a child's online renewal
+**Level reached:** Level 2 (System Transparency); Level 3 is the goal, not yet met
+**What we ship:** a transparent, situation-specific check the parent can see into and override — not yet an invisible part of the flow
+
+### Levels
+
+- Level 01 · Trigger Accuracy: **met** — the check opens by itself whenever the application is for a child under 16, so the parent never has to find or ask for it; false triggers are near zero because the trigger is a simple application attribute, not a guess.
+- Level 02 · System Transparency: **met** — each screen echoes the four answers back, shows only the rules for that situation, dates every item, and repeats that it reads no documents and that officers decide; the parent can always see why an item is listed.
+- Level 03 · Invisible Integration: **not met** — the check is still a visible step the parent works through. To reach Level 3 it would fade into the form itself, surfacing only the one thing that is wrong at the moment it becomes wrong, with no separate check to complete. This is the roadmap target, not v1.
+
+### Trust gaps
+
+- Black box: the parent can always see the situation the check placed them in and the dated rule behind each item; nothing is asserted without its source, and a wrong situation match is visible and editable at the top of the list.
+- Hallucination: the check never invents a rule — every item traces to current published ICA guidance with a date stamp, and if the rules are stale or unreachable the check hides itself rather than show a confident wrong answer.
+- Control: the parent, not the AI, ticks what they have and can close the check and submit anyway; the AI lists what is required and decides nothing, and all final decisions stay with ICA officers.
