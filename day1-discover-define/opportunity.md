@@ -50,17 +50,17 @@ Can a situation-based checklist catch most child-renewal returns without looking
 
 ### Metrics
 
-- Child-renewal return rate: 26%, vs 14% for adult renewals (made up)
-- Child applications as share of volume: 25%, about 130,000/year, which matches the 17% overall return rate in the brief (made up)
+- Child-application return rate: 26%, vs 14% for adult applications (made up). One denominator throughout: all child applications, not renewals alone.
+- Child applications as share of volume: 25%, about 130,000/year. The blend is consistent with the brief's 17% overall rate: 0.25 × 26% + 0.75 × 14% = 17% (made up)
 - Top return reasons for child applications: missing second-parent consent 34%, wrong or missing supporting document 22%, photo does not meet requirements 28%, other 16% (made up)
 - Median time a parent spends on the guidance page: 40 seconds (made up)
 - Officer time to process and write one return notice: 12 minutes (made up)
 
 ## Hypothesis
 
-I'm testing whether a short, situation-specific checklist shown before Submit can catch most of the reasons child-renewal applications get returned — without ever reading the documents.
+I'm testing whether a short, situation-specific checklist shown before Submit can catch most of the reasons child applications get returned — without ever reading the documents.
 
-- Risk type: Feasibility · Will the logic actually work?
-- Kill switch: Most child-renewal returns must be caused by missing or wrong document types (which a checklist can catch), not by document quality problems (which it cannot). If the split is the other way, the whole approach fails.
-- Kill-switch signal: Run the checklist against 200 synthetic returned child applications by 1 Dec 2026. If it flags the actual return reason in fewer than 40% of cases, stop and pivot. Below 40%, the 85% target cannot be reached.
-- Success signal: The checklist flags the real return reason in at least 50% of the 200 test cases by 1 Dec 2026. Then a live pilot lifts first-submission acceptance for child applications from 74% to at least 85% by 12 Jan 2027.
+- Risk type: Feasibility · Will the logic actually work? (With a close second in Usability: will parents who skip guidance act on a flag?)
+- Kill switch: Most child returns must be caused by missing or wrong document types (which a checklist can catch), not by document quality problems like photos (which it cannot). If the split is the other way, the whole approach fails.
+- Kill-switch signal: Run the checklist against 200 synthetic returned child applications by 1 Dec 2026. If it flags the actual return reason in fewer than 40% of cases, stop and pivot. Below 40%, the 85% target cannot be reached. Caveat: these 200 cases are self-authored, so this tests the checklist against our own assumed reason mix, not against real returns — the real reason distribution must be validated against ICA return codes before any wider rollout.
+- Success signal: The checklist flags the real return reason in at least 50% of the 200 test cases by 1 Dec 2026. Then a live pilot lifts first-submission acceptance — among parents who use the check, measured over a 50/50 control arm — from 74% to at least 85% by 12 Jan 2027.
