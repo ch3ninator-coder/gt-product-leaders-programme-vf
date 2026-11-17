@@ -32,6 +32,35 @@ Four short questions, one at a time: renewal or first passport, child a citizen 
 4. **Outcome:** a one-screen summary of what is still missing, with the exact next action ("upload the second parent's consent"), or a clear "you appear to have everything listed — an officer still makes the final decision."
    - Trust gap: **yes** — a false "all clear" would be worse than no check. The outcome states its own limits: it checks document *types*, not photo quality or officer judgment.
 
+## Handoff triggers: when a human must step in
+
+Two kinds of human-in-the-loop exist here, and they are not the same thing.
+
+- **The officer at the end** decides every application. This is not something the check triggers — it always happens. The check only makes sure what reaches the officer is complete.
+- **The check bailing out to a human** is the design choice below: the moments where the check stops guiding and routes the parent to an officer *now*, because answering would be worse than staying silent.
+
+The rule underneath all of it: **the check escalates whenever being wrong is more expensive than being silent.** Edge cases and stale rules are certain-to-be-wrong, so they are hard stops. High-consequence items are expensive-if-wrong, so the check withholds the "all clear" but still shows the warning.
+
+| Trigger | Type | What the check does |
+|---|---|---|
+| Parent overseas and cannot consent in person | Edge case | Hard stop; route to officer |
+| One parent deceased, sole custody, or a custody order | Edge case | Hard stop; route to officer |
+| Child's citizenship not straightforward (dual nationality, recent renunciation, in question) | Edge case | Hard stop; route to officer |
+| Name differs across documents (name change, adoption, correction) | Edge case | Hard stop; route to officer |
+| Lost, stolen or damaged passport | Edge case | Hard stop; route to officer (police report route) |
+| Four answers do not map cleanly to one of the six situations | Threshold (classification) | Do not pick the nearest; stop and route |
+| Answers are internally inconsistent around consent | Risk-based | Do not say "all clear"; escalate the consent question |
+| Checklist "rules as of" date is older than the set window, or rules service unreachable | Threshold (freshness) | Hide the check; send parent to standard guidance |
+| High-consequence item (e.g. second-parent consent) that the check cannot positively confirm | Risk-based | Show the requirement; withhold any "you have everything" |
+| Parent closes the check and submits anyway | User override | Allow it; the check is a guide, not a gate. Count it in abandon rate |
+
+Notes on each type:
+
+- **Edge cases** turn on facts or law a checklist cannot hold, so they are routed by rule with no judgment. The check says "this one needs a person" and shows the route; it does not attempt a partial answer.
+- **Risk-based** handoffs apply inside a covered situation. The check may still say "you need X," but it is slow to say "you have everything" on items where a wrong all-clear is costly, consent above all.
+- **Threshold-based** handoffs fire when the check is not confident enough: an ambiguous situation match, or rules that may be stale. A stale confident answer is worse than silence.
+- **User override** is deliberate. A parent can always submit without the check. That keeps it a guide, not a gate; the cost is measured as abandon rate, not prevented.
+
 ## Fallback when the AI is unsure (Advanced)
 
 If the four answers do not map cleanly to one of the six situations, or the parent flags an edge case, the check does not guess. It says plainly: "Your situation needs a person. Here is how to reach an ICA officer," and shows the contact route. It also degrades safely: if the rules service is unreachable or a checklist's date stamp is stale beyond a set window, the check hides itself rather than show possibly-wrong requirements, and tells the parent to use the standard guidance. Silence is safer than a confident wrong answer.
