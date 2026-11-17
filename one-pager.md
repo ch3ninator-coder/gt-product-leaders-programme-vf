@@ -12,14 +12,14 @@ Use case: **Scenario B · ICA passport applications and renewals** (synthetic da
 
 ## Opportunity and evidence
 
-**Opportunity:** A pre-submission check. The parent answers 3–4 questions about their situation and confirms the document types they have against a checklist for that situation. The check never reads the documents. Full framing: `day1-discover-define/opportunity.md`.
+**Opportunity:** A pre-submission check. The parent answers four questions about their situation and confirms the document types they have against a checklist for that situation. The check never reads the documents. Full framing: `day1-discover-define/opportunity.md`.
 
 **Evidence (made up):**
-- Child-renewal return rate is 26%, against 14% for adults.
+- Child-application return rate is 26%, against 14% for adults (all child applications, renewals and first-time).
 - Missing consent from the second parent causes 34% of child returns.
 - Parents spend a median of 40 seconds on the guidance page.
 
-**Success metric:** Among parents who use the check, first-submission acceptance for child applications rises from ~74% to at least 85% in the pilot — measured as the gain over a 50/50 control arm, not an absolute number, so seasonal drift does not read as success. Population-wide, at an assumed 70% uptake, that is about an 8-point lift, not 11.
+**Success metric:** The honest test is intent-to-treat — the whole treatment arm vs the whole control arm in a 50/50 pilot, so seasonal drift and self-selection do not read as success. Target: at least an 8-point gain over control on first-submission acceptance for child applications (≈ 74→82 across the arm). The per-user figure (74→85 among parents who actually use the check) is reported alongside, but it over-credits the check because diligent parents self-select into using it.
 
 ## Experience and trust
 
@@ -35,7 +35,7 @@ The flow and its trust design are in `day1-discover-define/ai-ux-flow.md`. In sh
 
 ## Agent role and guardrails
 
-*To be completed in Day 3*
+The agent's role, hard "never" list, constraints and output format are defined in `day1-discover-define/skill-file.md`. In short: it works for the parent, checks completeness before Submit, reads no document contents, invents no rules, hard-stops to an officer on edge cases, and never predicts or influences approval. *Roadmap detail to be expanded in Day 3.*
 
 ## Roles and operating model
 
@@ -54,7 +54,7 @@ Full working-backwards version: `day3-build/prfaq.md`.
 **Three coherent actions:**
 1. **Build** a 4-question screener and situation checklist. Every item traces to a dated ICA rule, and one named owner re-dates it on every rule change.
 2. **Test** the checklist against 200 made-up returned applications by 1 Dec 2026. Kill if the catch rate is under 40%. Continue if it is 50% or more.
-3. **Pilot** it as a 50/50 live split from 29 Dec 2026 to 12 Jan 2027, with edge cases sent to officers. Target: among users, a lift from 74% to 85% or higher over the control arm, which needs catch rate × fix rate ≥ 42%.
+3. **Pilot** it as a 50/50 live split from 29 Dec 2026 to 12 Jan 2027, with edge cases sent to officers. Decide on the intent-to-treat gain over control (target ≥ 8 points across the arm); the per-user path to 85% needs catch rate × fix rate ≥ 42%.
 
 **Known limit of the cheap test:** the 1 Dec dry run uses 200 applications we authored, so it checks that the checklist matches our own assumed return reasons — not that real returns are 56% rule-based. The live pilot is the first real test of that assumption, and of the behavioural risk (will parents who skip guidance act on a flag?). Validate the reason mix against real ICA return codes before any wider rollout.
 
