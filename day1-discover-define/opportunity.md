@@ -51,7 +51,7 @@ Can a situation-based checklist catch most child-renewal returns without looking
 ### Metrics
 
 - Child-renewal return rate: 26%, vs 14% for adult renewals (made up)
-- Child applications as share of volume: ~30%, about 156,000/year (made up)
+- Child applications as share of volume: 25%, about 130,000/year, which matches the 17% overall return rate in the brief (made up)
 - Top return reasons for child applications: missing second-parent consent 34%, wrong or missing supporting document 22%, photo does not meet requirements 28%, other 16% (made up)
 - Median time a parent spends on the guidance page: 40 seconds (made up)
 - Officer time to process and write one return notice: 12 minutes (made up)
@@ -62,5 +62,5 @@ I'm testing whether a short, situation-specific checklist shown before Submit ca
 
 - Risk type: Feasibility · Will the logic actually work?
 - Kill switch: Most child-renewal returns must be caused by missing or wrong document types (which a checklist can catch), not by document quality problems (which it cannot). If the split is the other way, the whole approach fails.
-- Kill-switch signal: Run the checklist against 200 synthetic returned child applications by 1 Dec 2026. If it flags the actual return reason in fewer than 50% of cases, stop and pivot.
-- Success signal: The checklist flags the real return reason in at least 70% of the 200 test cases by 1 Dec 2026, and a live pilot lifts first-submission acceptance for child renewals by at least 10 percentage points by 12 Jan 2027.
+- Kill-switch signal: Run the checklist against 200 synthetic returned child applications by 1 Dec 2026. If it flags the actual return reason in fewer than 40% of cases, stop and pivot. Below 40%, the 85% target cannot be reached.
+- Success signal: The checklist flags the real return reason in at least 50% of the 200 test cases by 1 Dec 2026. Then a live pilot lifts first-submission acceptance for child applications from 74% to at least 85% by 12 Jan 2027.
