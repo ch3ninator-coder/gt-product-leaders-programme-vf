@@ -10,7 +10,7 @@
 
 *Singapore, 26 January 2027 (made up).* Starting today, parents applying online for a child's passport get a two-minute check before they submit. They answer four questions about their situation. They then see one screen listing exactly what their case needs, and tick off what they have. If something is missing, they find out now, not six days later.
 
-**The problem.** Applications for children under 16 are a quarter of passport volume but nearly 40% of all returns. One in four child applications comes back. The most common reason is missing consent from the second parent. Parents are not careless. The guidance covers every possible case on one long page, and a parent cannot tell which parts apply to them. They find out what "complete" meant only when an officer returns the form.
+**The problem.** Applications for children under 16 are a quarter of passport volume but nearly 40% of all returns. One in four comes back. The most common reason is missing consent from the second parent — though the check can only confirm that a consent document is present, never that the consent is valid; that stays with an officer. Parents are not careless. The guidance covers every possible case on one long page, and a parent cannot tell which parts apply to them. They find out what "complete" meant only when an officer returns the form.
 
 **The solution.** Passport Ready Check asks: renewal or first passport? Is the child a citizen? Are both parents able to consent? Is anyone overseas? It then shows only the rules for that situation, each with a date stamp. It never opens or reads the documents. It never says an application will be approved. Officers still make every decision. If a case is unusual, such as a parent who is overseas or a custody order, the check says so and points the parent to an officer instead of guessing.
 
@@ -45,6 +45,8 @@ Every screen shows "Rules as of [date]". When ICA changes a rule, the check is u
 
 ### 1. How big is the segment?
 
+One denominator throughout: **all child applications** (renewals and first-time), not renewals alone. The 26% return rate, the 74% baseline and the reason split below all describe that same group.
+
 | | Per year | Per week | Source |
 |---|---|---|---|
 | All applications | 520,000 | 10,000 | brief |
@@ -53,7 +55,7 @@ Every screen shows "Rules as of [date]". When ICA changes a rule, the check is u
 | Child returns (26% return rate) | 33,800 | 650 | made up |
 | Child share of all returns | **38%** | | derived |
 
-Child applications are 25% of volume but 38% of returns, so their return rate is nearly twice the adult rate (26% vs 14%). That gap is the opportunity.
+Child applications are 25% of volume but 38% of returns, so their return rate is nearly twice the adult rate (26% vs 14%). The blend is consistent with the brief's 17% overall: 0.25 × 26% + 0.75 × 14% = 17%. That gap is the opportunity.
 
 ### 2. How much of it can a checklist reach?
 
@@ -70,18 +72,20 @@ About **56%** of child returns are things a checklist can catch, roughly 364 a w
 
 ### 3. What do we have to get right to hit 85%?
 
-Going from 74% to 85% means preventing 11 of every 26 returns, or **42% of child returns**. That breaks into two numbers we can measure:
+First, read the target precisely: **85% is measured among parents who use the check**, not across the whole child population. Going from 74% to 85% among users means preventing 11 of every 26 returns, or **42% of child returns**. That breaks into two numbers we can measure:
 
 **catch rate × fix rate ≥ 42%**
 
 - *Catch rate:* the share of returns where the check would have flagged the real reason. The ceiling is 56%.
 - *Fix rate:* the share of flagged parents who fix the problem before they submit.
 
-A catch rate of 50% with a fix rate of 85% gives 42.5%. That meets the target, with little slack. A catch rate under 40% cannot reach 85% even if every parent fixes every flag. That is the kill line.
+A catch rate of 50% with a fix rate of 85% gives 42.5%. That meets the target, with little slack. A catch rate under 40% cannot reach 85% even if every parent fixes every flag — that is the kill line. Between 40% and 50% is a watch band: continue only if the fix rate is high enough that catch × fix still clears 42%.
 
 ### 4. What does it save at full rollout?
 
-Assume 70% of parents use the check and acceptance improves by 11 points:
+Keep the two readings apart. The 85% above is *per user*. **Population-wide, the lift is smaller**, because not everyone uses the check. At 70% uptake the best possible population gain is 0.70 × 56% ceiling = 39% of returns prevented, so the realistic whole-population acceptance rises from 74% to about **82%** (an 8-point lift), not to 85%. Claiming 85% across all child applications would be arithmetically impossible at 70% uptake; we do not claim it.
+
+At 70% uptake and the per-user improvement above:
 
 - About **10,000** avoided returns a year (~190 a week).
 - About **60,000 family-days** of delay avoided (10,000 × 6 days).
@@ -108,12 +112,19 @@ The child return rate is the highest and the reasons are the most rule-based. Ru
 | Test | Date | Kill if | Continue if |
 |---|---|---|---|
 | Run the checklist against 200 made-up returned child applications | 1 Dec 2026 | Catch rate < 40% | Catch rate ≥ 50% |
-| 2-week live pilot, 50/50 split (~2,500 applications per arm) | 29 Dec 2026 – 12 Jan 2027 | Gain < 5 points, or > 15% of parents abandon the check | Acceptance ≥ 85%, fix rate ≥ 85% |
+| 2-week live pilot, 50/50 split (~2,500 applications per arm) | 29 Dec 2026 – 12 Jan 2027 | Lift over control < 5 points, or > 15% of parents abandon the check | Lift over control ≥ 11 points among users, fix rate ≥ 85% |
 
 Each arm needs about 210 applications to detect a move from 74% to 85%. Two weeks gives far more than that, so the pilot can give a clear answer.
 
+**Be honest about what the cheap test proves.** The 1 Dec dry run uses 200 applications we wrote ourselves, with return reasons we assigned (34/22/28/16). So it tests whether the checklist matches *our* assumed reason mix — it cannot tell us whether real child returns are actually 56% rule-based. The riskiest assumption in this whole plan, that most returns are document-type problems rather than photo or quality problems, is not tested until we see real data. Before any rollout beyond the pilot, pull the real ICA return-reason distribution and re-run the catch-rate estimate against it. If real returns are mostly photo quality, this product is the wrong lever and the v2 document-reading option (§7) moves up.
+
+Note too that the pilot runs inside the current vendor channel, which withdraws ~26 Jan 2027, while launch is on the replacement channel. We validate on a channel about to disappear, then ship on one still being built. That raises the behavioural question early but leaves a real integration risk — see §9.
+
 ### 9. What are the dependencies and risks?
 
-- **Rules stay current:** someone at ICA owns the checklist and re-dates it on every rule change. Without an owner, the check gives wrong answers.
+- **Replacement channel must ship:** the check lives inside the online application. If the new channel slips past the vendor exit, there is nothing for the check to sit in. This is the hardest dependency and it shares the same 10-week deadline.
+- **Rules stay current:** one named owner at ICA re-dates the checklist on every rule change. Without an owner, the check gives wrong answers, which is worse than no check.
+- **Reason-mix assumption:** the 56% catchable figure is our estimate. If real returns are mostly photo quality, the whole lever is wrong (see §8). Validate against real return codes before scaling.
+- **Consent can be ticked but not verified:** a parent can mark "I have consent" when the consent is invalid. The check never gives a confident all-clear on consent for this reason; the value there is reminding, not confirming. The false-all-clear metric watches this.
 - **Edge cases:** the hand-off to officers must work from day one, or parents with unusual cases get stuck.
 - **False confidence:** parents may read "ready" as "approved". Every screen says officers decide.
