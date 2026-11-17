@@ -45,14 +45,18 @@ Use case: **Scenario B · ICA passport applications and renewals** (synthetic da
 
 ### Strategy kernel
 
-**Diagnosis:** Errors are found too late. Parents only learn what "complete" means after an officer returns the application, days later. With the vendor gone in 10 weeks and counters covering only 35% of demand, every avoidable return becomes a counter queue.
+Full working-backwards version: `day3-build/prfaq.md`.
 
-**Guiding policy:** Move the completeness check to before Submit, starting with child renewals. Use only document types and published ICA rules with a date stamp. Never read document contents and never make decisions; officers decide.
+**Diagnosis:** Errors are found too late. Child applications are 25% of volume but 38% of returns, about 650 a week (made up). Parents only learn what "complete" means from a return notice, six days later. About 56% of those returns are rule-based (missing consent, wrong document), so they are preventable before Submit. With the vendor gone in 10 weeks and counters covering only 35% of demand, every avoidable return becomes a counter queue.
+
+**Guiding policy:** Move the completeness check to before Submit, starting with child applications. Use only document types and dated ICA rules. Never read document contents and never make decisions; officers decide. Photo quality is out of scope for v1.
 
 **Three coherent actions:**
-1. **Build** a 3–4 question screener and situation checklist for child renewals. Every item traces to a dated ICA rule.
-2. **Test** the checklist against 200 made-up returned applications by 1 Dec 2026. This is the kill switch: if it catches fewer than 50% of the real return reasons, stop and pivot.
-3. **Pilot** it live, sending edge cases (a parent overseas, a parent who is deceased, a custody order) straight to officers. Track first-submission acceptance through 12 Jan 2027, two weeks before the vendor exits.
+1. **Build** a 4-question screener and situation checklist. Every item traces to a dated ICA rule, and one named owner re-dates it on every rule change.
+2. **Test** the checklist against 200 made-up returned applications by 1 Dec 2026. Kill if the catch rate is under 40%. Continue if it is 50% or more.
+3. **Pilot** it as a 50/50 live split from 29 Dec 2026 to 12 Jan 2027, with edge cases sent to officers. Target: first-time acceptance from 74% to 85% or higher, which needs catch rate × fix rate ≥ 42%.
+
+**What this does not solve:** about 190 avoided returns a week is about 5% of counter capacity. The new channel itself must still launch on time.
 
 *Roadmap to be completed in Day 3, Module 9*
 
