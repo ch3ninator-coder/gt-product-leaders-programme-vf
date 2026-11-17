@@ -1,6 +1,8 @@
 # PRFAQ: Passport Ready Check
 
-**Scenario B · ICA passport applications.** This file is a working-backwards press release plus FAQ. It explains the strategy in `one-pager.md`. All numbers, quotes and names are made up unless marked "brief".
+**Scenario B · ICA passport applications.** This file is a working-backwards press release plus FAQ. It explains the strategy in `one-pager.md`.
+
+**Provenance of numbers.** Figures marked "course" (520,000 applications/year, 17% return rate, ~35% counter coverage, ~6 days per return, 38% read guidance) come from the course scenario brief on the learning platform, not from the repo's `use-cases/` file, which carries no numbers. Everything marked "made up" — all child-level figures, reason splits, times and quotes — is invented by me as synthetic data. Nothing here is real resident or case data.
 
 ---
 
@@ -49,13 +51,13 @@ One denominator throughout: **all child applications** (renewals and first-time)
 
 | | Per year | Per week | Source |
 |---|---|---|---|
-| All applications | 520,000 | 10,000 | brief |
-| All returns (17%) | 88,400 | 1,700 | brief |
+| All applications | 520,000 | 10,000 | course |
+| All returns (17%) | 88,400 | 1,700 | course |
 | Child applications (25% of volume) | 130,000 | 2,500 | made up |
 | Child returns (26% return rate) | 33,800 | 650 | made up |
 | Child share of all returns | **38%** | | derived |
 
-Child applications are 25% of volume but 38% of returns, so their return rate is nearly twice the adult rate (26% vs 14%). The blend is consistent with the brief's 17% overall: 0.25 × 26% + 0.75 × 14% = 17%. That gap is the opportunity.
+Child applications are 25% of volume but 38% of returns, so their return rate is nearly twice the adult rate (26% vs 14%). The blend is consistent with the course's 17% overall: 0.25 × 26% + 0.75 × 14% = 17%. That gap is the opportunity.
 
 ### 2. How much of it can a checklist reach?
 
@@ -83,7 +85,7 @@ A catch rate of 50% with a fix rate of 85% gives 42.5%. That meets the target, w
 
 ### 4. What does it save at full rollout?
 
-Keep the two readings apart. The 85% above is *per user*. **Population-wide, the lift is smaller**, because not everyone uses the check. At 70% uptake the best possible population gain is 0.70 × 56% ceiling = 39% of returns prevented, so the realistic whole-population acceptance rises from 74% to about **82%** (an 8-point lift), not to 85%. Claiming 85% across all child applications would be arithmetically impossible at 70% uptake; we do not claim it.
+Keep the two readings apart. The 85% above is *per user*. **Population-wide, the lift is smaller**, because not everyone uses the check. At 70% uptake and the 42% operating point, returns prevented across the whole population = 0.70 × 42% ≈ 29%, so whole-population acceptance rises from 74% to about **82%** (74 + 0.29 × 26 ≈ 82), an 8-point lift, not 85%. (The absolute ceiling, if every user caught and fixed everything, would be 0.70 × 56% = 39% prevented ≈ 84%; the 82% figure uses the realistic 42% operating point, not the ceiling.) Claiming 85% across all child applications would overstate it; we do not.
 
 At 70% uptake and the per-user improvement above:
 
@@ -95,7 +97,7 @@ The officer saving is small. The real wins are faster passports for families, an
 
 ### 5. Does this solve the vendor exit?
 
-No, and we should not claim it does. Counters hold ~3,500 people a week (35% of demand, brief). 190 avoided returns a week is about 5% of that. The check is one lever that lowers rework in the new channel. The channel itself still has to launch on time. That is a separate workstream.
+No, and we should not claim it does. Counters hold ~3,500 people a week (35% of demand, course). 190 avoided returns a week is about 5% of that. The check is one lever that lowers rework in the new channel. The channel itself still has to launch on time. That is a separate workstream.
 
 ### 6. Why child applications first, and not everyone?
 
@@ -112,9 +114,9 @@ The child return rate is the highest and the reasons are the most rule-based. Ru
 | Test | Date | Kill if | Continue if |
 |---|---|---|---|
 | Run the checklist against 200 made-up returned child applications | 1 Dec 2026 | Catch rate < 40% | Catch rate ≥ 50% |
-| 2-week live pilot, 50/50 split (~2,500 applications per arm) | 29 Dec 2026 – 12 Jan 2027 | Lift over control < 5 points, or > 15% of parents abandon the check | Lift over control ≥ 11 points among users, fix rate ≥ 85% |
+| 2-week live pilot, 50/50 split (~2,500 applications per arm) | 29 Dec 2026 – 12 Jan 2027 | Intent-to-treat gain over control < 5 points, or > 15% abandon | Intent-to-treat gain ≥ 8 points over control (≈ 74→82 whole-arm), with per-user rise to ≥ 85% and fix rate ≥ 85% reported alongside |
 
-Each arm needs about 210 applications to detect a move from 74% to 85%. Two weeks gives far more than that, so the pilot can give a clear answer.
+The decision turns on the **intent-to-treat** comparison — whole treatment arm vs whole control arm — because that is the only unbiased measure; the per-user 85% is reported but over-credits the check through self-selection. To detect the per-user 11-point move needs ~210 applications per arm; to detect the honest 8-point intent-to-treat move needs ~420 per arm. The pilot's ~2,500 per arm covers both comfortably.
 
 **Be honest about what the cheap test proves.** The 1 Dec dry run uses 200 applications we wrote ourselves, with return reasons we assigned (34/22/28/16). So it tests whether the checklist matches *our* assumed reason mix — it cannot tell us whether real child returns are actually 56% rule-based. The riskiest assumption in this whole plan, that most returns are document-type problems rather than photo or quality problems, is not tested until we see real data. Before any rollout beyond the pilot, pull the real ICA return-reason distribution and re-run the catch-rate estimate against it. If real returns are mostly photo quality, this product is the wrong lever and the v2 document-reading option (§7) moves up.
 

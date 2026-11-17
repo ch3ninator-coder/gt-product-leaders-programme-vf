@@ -10,7 +10,7 @@ All quotes and metrics are synthetic and labelled as made up.
 
 ### 1. Goal
 
-More child-renewal applications are complete the first time they are submitted, so the replacement channel can launch in 10 weeks without a backlog of returns that walk-in counters cannot absorb.
+More child applications are complete the first time they are submitted, so the replacement channel can launch in 10 weeks without a backlog of returns that walk-in counters cannot absorb. (Scope note: all sizing and the 74%/85% metric are for all child applications, renewals and first-time; renewals are the most common and most confused case, so examples lead with them, but the denominator is all child applications.)
 
 ### 2. Problem
 
@@ -33,12 +33,13 @@ Parents only discover their application is incomplete after an officer reviews i
 
 ### 5. Success
 
-- **Pass:** In a 2-week pilot, first-submission acceptance rate for child renewals rises from ~74% to at least 85% among parents who used the check. (74% is made up.)
-- **Fail:** Improvement is less than 5 percentage points, or more than 15% of parents abandon the check without finishing it.
+- **Pass:** In a 2-week 50/50 pilot on child applications, the treatment arm (check shown) beats the control arm (no check) on first-submission acceptance by at least 5 points, intent-to-treat — everyone assigned to treatment, not only those who used it. Among parents who actually used the check, the per-user rise is from ~74% to at least 85%. (74% is made up.)
+- **Fail:** Intent-to-treat gain over control is under 5 points, or more than 15% of parents abandon the check without finishing it.
+- **Note on attribution:** the per-user 85% over-credits the check, because diligent parents self-select into using it. Intent-to-treat (whole arm vs whole arm) is the honest, unbiased number and is the one the Pass/Fail line turns on. The per-user figure is reported alongside, not instead.
 
 ### 6. Explore
 
-Can a situation-based checklist catch most child-renewal returns without looking inside the documents? If most returns are "wrong or missing document type" (e.g. no consent from the second parent), a checklist works. If most are document quality problems (e.g. photo does not meet specs), a checklist cannot catch them and we need a different tool. We can only find this split by building the check and running it against returned cases.
+Can a situation-based checklist catch most child-application returns without looking inside the documents? If most returns are "wrong or missing document type" (e.g. no consent from the second parent), a checklist works. If most are document quality problems (e.g. photo does not meet specs), a checklist cannot catch them and we need a different tool. We can only find this split by building the check and running it against returned cases.
 
 ## Evidence (synthetic)
 
@@ -51,7 +52,7 @@ Can a situation-based checklist catch most child-renewal returns without looking
 ### Metrics
 
 - Child-application return rate: 26%, vs 14% for adult applications (made up). One denominator throughout: all child applications, not renewals alone.
-- Child applications as share of volume: 25%, about 130,000/year. The blend is consistent with the brief's 17% overall rate: 0.25 × 26% + 0.75 × 14% = 17% (made up)
+- Child applications as share of volume: 25%, about 130,000/year. The blend is consistent with the course's 17% overall rate: 0.25 × 26% + 0.75 × 14% = 17% (share and child rate made up; 17% from course brief)
 - Top return reasons for child applications: missing second-parent consent 34%, wrong or missing supporting document 22%, photo does not meet requirements 28%, other 16% (made up)
 - Median time a parent spends on the guidance page: 40 seconds (made up)
 - Officer time to process and write one return notice: 12 minutes (made up)
