@@ -4,14 +4,19 @@ Scenario B · ICA passport applications. Day 2, Lab 1. This is a plan only. No c
 
 All rules, documents, dates, routes and cases in the prototype are made up, and each one is labelled "(made up)". Nothing in it is real ICA guidance.
 
-## 1. What the prototype is for
+## 1. The cheapest test for each risk
 
-It shows that the check's logic and trust design work, on made-up data. It tests two risks from `day1-discover-define/opportunity.md`:
+A full clickable prototype is not the cheapest test of the hypothesis in `day1-discover-define/opportunity.md`. Each risk gets the cheapest test that answers it, in this order:
 
-- **Feasibility.** Does the checklist flag the real return reason? We test this with a dry run built into the same file (section 8), using the same rules the parent sees.
-- **Usability.** Will a parent act on a flag? We test this with a five-person hallway test (section 9).
+| Order | Risk | Cheapest test | Why this order |
+|---|---|---|---|
+| 1 | **Feasibility:** are most child returns caused by missing or wrong document types, not photo problems? | Return-reason data. In practice: ICA's count of child returns by reason (totals only, no personal data). In this course: a spreadsheet of 200 made-up returns, each tagged with its reason and whether the checklist would catch it. | It can stop the idea before anything is built. |
+| 2 | **Usability:** will a parent act on a flag? | One fixed result screen (missing consent) shown to five people (section 9). | It needs one screen, not the whole flow. |
+| 3 | **Does it all work together?** | The clickable flow, which is the real MVP. | Only worth building if tests 1 and 2 pass. |
 
-It is not production code. It does not connect to any ICA system.
+**Limit:** the made-up spreadsheet is circular, because we wrote the return reasons ourselves. Only real return data truly tests feasibility.
+
+Lab 1 builds the screen for test 2. Nothing here is production code or connects to any ICA system.
 
 ## 2. Format
 
@@ -106,7 +111,7 @@ Rules as of [date] (made up).
 
 **Stale rules.** Each rule has a made-up "as of" date. The freshness window is 30 days (made up). **Simulate stale rules** pushes the date past the window. The check then hides and shows only: "This check is unavailable right now. Please use the standard guidance (made-up link)." This is the fallback in `ai-ux-flow.md`: silence is safer than a confident wrong answer.
 
-**Dry run** (built after Lab 1, target 1 Dec 2026). **Run dry run** puts 200 made-up returned child applications through the same rule function the parent sees, and prints the catch rate.
+**Dry run.** The feasibility test runs first as a spreadsheet (section 1), because that is cheapest. Once the full flow is built, **Run dry run** puts the same 200 made-up cases through the rule function the parent sees and prints the catch rate. This only confirms the built rules match the spreadsheet. It adds no new evidence about real returns.
 
 - Each made-up case holds the four answers, the document types ticked (including false ticks, where consent is ticked but invalid) and its assigned return reason.
 - **Catch rule:** a case counts as caught only if its return reason appears as a "Still needed" item, or as a hard stop for that reason.
@@ -115,13 +120,18 @@ Rules as of [date] (made up).
 
 ## 9. Usability check (Day 2)
 
-Five people: colleagues, each given a made-up persona. Each gets a missing-consent renewal and is asked to finish the check. We record:
+This uses the Lab 1 result screen only. Five people (colleagues, each given a made-up persona). Read each one the same made-up story: "You are renewing your 8-year-old's passport online. You have uploaded everything and are about to press Submit. This screen appears." Then ask:
 
-- whether they can say the next action within 10 seconds of seeing the result;
-- whether anyone reads "Looks complete" as "approved";
-- whether anyone uses "Submit anyway".
+1. What would you do next?
+2. Has your application been approved or rejected?
+3. Would you press Submit anyway? Why?
 
-This is an early signal for the fix rate (≥ 85%) and abandon rate (< 15%) targets. Five people can't prove either.
+Record how long each person takes to name the next action, and write down their answers word for word.
+
+- **Pass (our own bar):** at least 4 of 5 name the next action (get the second parent's consent) within 10 seconds, and nobody thinks the check approves or rejects.
+- **Fail:** 2 or more can't name the action, or anyone thinks the check decides.
+
+This is an early signal for the fix rate (≥ 85%) and abandon rate (< 15%) targets. Five people can't prove either. A later round can show a "Looks complete: Yes" version, to check nobody reads it as approval.
 
 ## 10. Screens
 
@@ -139,17 +149,20 @@ This is an early signal for the fix rate (≥ 85%) and abandon rate (< 15%) targ
 
 **No ICA logo or crest**, no real form codes, phone numbers or URLs.
 
-## 11. First screen (the only screen built in Lab 1)
+## 11. The screen built in Lab 1: the result screen
 
-Screen 1 is built first because it is where the flow starts. It also tests the first trust gap in `ai-ux-flow.md`: a parent may see the check as a new hurdle.
+Lab 1 builds screen 6, the result, not screen 1. The questions carry no risk: anyone can answer "renewal or first passport?". The risk is whether a parent understands the result and acts on it, so that is the screen worth building and testing first.
 
-- A made-up "Review your application (made up)" frame, so the check is visibly part of the application.
-- The line: "Shown because this application is for a child under 16."
-- The opener: "A free check that works for you. It is not a gate. It takes about two minutes."
-- Question 1 with its four answers, the marker "Question 1 of up to 4", and the "Something else applies to us" link.
-- The standard banner, footer and Submit anyway link.
+It is hard-coded to one made-up case, check 2 in section 12: a renewal where the second parent has not given consent.
 
-Screen 1 stays lean on purpose: the made-up median time on the guidance page is 40 seconds. The result screen carries more risk, so it is the first thing to build after Lab 1.
+- Inside the made-up "Review your application (made up)" frame.
+- The parent's answers echoed at the top, each with a Change link (not working yet).
+- The READY CHECK result from section 7: child renewal · Not yet · Still needed (1: second-parent consent, with "Do this") · Confirm with an officer (0) · Looks present (2).
+- A date on each item, and the photo reminder line.
+- A main button back to the application, the Submit anyway link, and the "Will my application be approved?" link with its refusal.
+- The standard banner and footer.
+
+**In a real application,** question 1 would already be answered by the form ("Renewal, from your application. Change"), so the real flow would start at question 2. The prototype will still ask it later, because it has no real form behind it.
 
 ## 12. Done when
 
@@ -169,15 +182,17 @@ Each check has an expected output. `scenarios.md` repeats them as test scripts.
 | 10 | Change Q1 on the checklist screen | Checklist switches to the other situation |
 | 11 | Submit anyway from every screen | "You left the check"; nothing submitted |
 | 12 | Every screen | Banner, footer and Submit anyway present |
-| 13 | Every result | Under 300 words; no "approved", "ready", "will pass" or "guaranteed" |
+| 13 | Every result | Under 300 words; never claims or predicts approval: no "you are ready", "will be approved", "will pass" or "guaranteed" |
 | 14 | Whole file | No text inputs; opens offline by double-click; no network requests |
 
 ## 13. Build order
 
-1. **Lab 1 (now):** screen 1 only, in `index.html`. Preview it, fix one thing, save on main.
-2. Screens 2–9, `scenarios.md` and `README.md`.
-3. The dry run and 200 made-up cases, by 1 Dec 2026.
-4. The hallway test, written up in `day2-validate/validation-brief.md`.
+1. **Lab 1 (now):** the result screen only (screen 6), in `index.html`. Preview it, fix one thing, save on main.
+2. **The two cheap tests, before 1 Dec 2026:** the return-reason spreadsheet (feasibility) and the five-person test on the result screen (usability). Write both up in `day2-validate/validation-brief.md`.
+3. **Only if both pass:** screens 1–5 and 7–9, `scenarios.md` and `README.md`.
+4. **Then:** the in-file dry run, to confirm the built rules give the same catch rate as the spreadsheet.
+
+If either cheap test fails, stop before step 3 and go back to the opportunity.
 
 Every save goes on main through a pull request (CLAUDE.md rule 7).
 
