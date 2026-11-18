@@ -3,357 +3,252 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Passport Ready Check: prototype walkthrough (synthetic data only)</title>
+<title>Passport Ready Check: guided prototype walkthrough (synthetic data only)</title>
 <!--
   Day 2 prototype walkthrough. Scenario B, ICA passport applications.
-  Follows one made-up child renewal twice: as it works today, and with the
-  Passport Ready Check before Submit. Every person, case, time and number is
-  made up unless marked "course". Not a real ICA service.
+  A guided tour: a spotlight shows where to look, a guide card says what it
+  means, and at key moments the viewer taps the button themselves.
+  Every person, case, time and number is made up unless marked "course".
+  Not a real ICA service.
   Self-contained: inline CSS and JS, no network requests. Fonts load from the
   repo's own assets/fonts folder and fall back to system fonts.
-  Keys: right/left arrow to step, space to play or pause.
+  Keys: right arrow for Next, left arrow for Back.
 -->
 <link rel="stylesheet" href="../../assets/fonts/ps-fonts.css">
 <style>
   :root {
     color-scheme: light;
     --paper: #e6eeea;
-    --paper-2: #f4f8f6;
+    --paper-2: #f5f8f7;
     --ink: #102a27;
     --ink-2: #4a5f5a;
     --rule: #c3d2cc;
-    --parent: #0f6e5a;
     --check: #2846b8;
-    --officer: #7a4e1d;
+    --check-soft: #e9edfb;
     --stamp: #b42339;
+    --stamp-soft: #fbecee;
+    --ok: #0f6e5a;
+    --officer: #7a4e1d;
     --sans: "Saans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     --mono: "Antarctican Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --guide-w: 320px;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
     font-family: var(--sans);
     color: var(--ink);
-    background-color: var(--paper);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='60' viewBox='0 0 240 60'%3E%3Cg fill='none' stroke='%23102a27' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M0 30 C 30 10, 90 10, 120 30 S 210 50, 240 30'/%3E%3Cpath d='M0 38 C 30 18, 90 18, 120 38 S 210 58, 240 38'/%3E%3Cpath d='M0 22 C 30 2, 90 2, 120 22 S 210 42, 240 22'/%3E%3C/g%3E%3C/svg%3E");
+    background: var(--paper);
     line-height: 1.45;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
   button { font: inherit; color: inherit; }
   :focus-visible { outline: 3px solid var(--check); outline-offset: 2px; }
 
-  .banner {
-    font-size: 0.8rem;
-    text-align: center;
-    padding: 0.35rem 1rem;
-    background: var(--ink);
-    color: var(--paper-2);
-  }
+  .banner { font-size: 0.78rem; text-align: center; padding: 0.35rem 1rem; background: var(--ink); color: var(--paper-2); }
 
-  /* Header and chapters */
-  .top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    padding: 1rem 1.5rem 0.75rem;
-  }
-  .top h1 { font-size: 1.35rem; font-weight: 800; margin: 0; letter-spacing: -0.01em; }
-  .top p { margin: 0.1rem 0 0; color: var(--ink-2); font-size: 0.9rem; }
-  .chapters { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  /* Top bar */
+  .top { position: sticky; top: 0; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--rule); }
+  .top-in { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 1.25rem; max-width: 1180px; margin: 0 auto; }
+  .top h1 { font-size: 1.05rem; font-weight: 800; margin: 0; white-space: nowrap; }
+  .chapters { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.3rem; overflow-x: auto; scrollbar-width: none; }
+  .chapters::-webkit-scrollbar { display: none; }
   .chapters button {
-    border: 1px solid var(--rule);
-    background: var(--paper-2);
-    border-radius: 999px;
-    padding: 0.3rem 0.75rem 0.3rem 0.4rem;
-    font-size: 0.82rem;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 0.4rem;
-  }
-  .chapters button span {
-    display: inline-grid; place-items: center;
-    width: 1.35rem; height: 1.35rem; border-radius: 50%;
-    background: var(--paper); font-size: 0.75rem; font-weight: 700;
+    white-space: nowrap; cursor: pointer;
+    border: 1px solid var(--rule); background: var(--paper-2);
+    border-radius: 999px; padding: 0.25rem 0.7rem; font-size: 0.8rem;
   }
   .chapters button[aria-current="step"] { background: var(--ink); color: var(--paper-2); border-color: var(--ink); }
-  .chapters button[aria-current="step"] span { background: var(--paper-2); color: var(--ink); }
-  .chapters button.done span { background: var(--rule); }
+  .chapters button.done { color: var(--ink-2); }
+  .progress { height: 3px; background: var(--rule); }
+  .progress i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 0.3s; }
 
-  /* Main layout */
-  .layout {
-    flex: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
-    grid-template-areas: "stage side" "map map";
-    gap: 1rem;
-    padding: 0 1.5rem 1rem;
-  }
-  .stage { grid-area: stage; min-width: 0; }
-  .side { grid-area: side; display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
-  .map { grid-area: map; }
-
-  .scene-head { max-width: 62ch; margin-bottom: 0.9rem; }
-  .track {
-    display: inline-block;
-    font-size: 0.8rem; font-weight: 600;
-    padding: 0.15rem 0.6rem; border-radius: 999px;
-    background: var(--paper-2); border: 1px solid var(--rule);
-  }
-  .track[data-track="today"] { color: var(--stamp); border-color: #e2b4bc; }
-  .track[data-track="check"] { color: var(--check); border-color: #b9c5ee; }
-  .track[data-track="edge"] { color: var(--officer); border-color: #dcc6aa; }
-  .scene-head h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.15; margin: 0.45rem 0 0.35rem; letter-spacing: -0.015em; font-weight: 800; }
-  .scene-head p { margin: 0; color: var(--ink-2); font-size: 1rem; }
-
-  .set {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 1.25rem 2rem;
-    min-height: 470px;
-    padding: 2.6rem 1rem 1rem;
-    border: 1px solid var(--rule);
-    border-radius: 14px;
-    background: rgba(244, 248, 246, 0.6);
-  }
-  .clock {
-    position: absolute; top: 0.7rem; right: 0.9rem;
-    font-family: var(--mono);
-    font-size: 0.82rem;
-    display: flex; gap: 0.6rem; align-items: baseline;
-    color: var(--ink-2);
-  }
-  .clock[hidden] { display: none; }
-  .clock b { font-size: 1.15rem; color: var(--ink); font-weight: 600; }
+  /* Stage: scene on the left, a lane for the guide on the right */
+  .stage { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--guide-w) + 40px); }
+  .scene-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .context { display: flex; align-items: baseline; justify-content: center; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 0.9rem; min-height: 1.9rem; }
+  .context[hidden] { display: none; }
+  .who { font-size: 0.9rem; font-weight: 600; color: var(--ink-2); }
+  .who[data-track="today"] { color: var(--stamp); }
+  .who[data-track="check"] { color: var(--check); }
+  .who[data-track="edge"] { color: var(--officer); }
+  .clock { font-family: var(--mono); font-size: 0.85rem; color: var(--ink-2); padding: 0.1rem 0.45rem; border-radius: 6px; }
+  .clock b { font-size: 1.15rem; color: var(--ink); }
   .clock.late b { color: var(--stamp); }
-  .set-note { position: absolute; top: 0.8rem; left: 1rem; font-size: 0.78rem; color: var(--ink-2); }
-
-  /* Speech bubble */
-  .bubble {
-    position: relative;
-    max-width: 240px;
-    background: #fff;
-    border: 1.5px solid var(--ink);
-    border-radius: 14px;
-    padding: 0.7rem 0.85rem;
-    font-size: 0.98rem;
-  }
-  .bubble[hidden] { display: none; }
-  .bubble .who { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.2rem; }
-  .bubble[data-who="parent"] .who { color: var(--parent); }
-  .bubble[data-who="officer"] .who { color: var(--officer); }
-  .bubble p { margin: 0; }
-  .bubble::after {
-    content: ""; position: absolute; top: 50%; width: 14px; height: 14px;
-    background: #fff; border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink);
-  }
-  .bubble.left::after { right: -8px; transform: translateY(-50%) rotate(-45deg); }
-  .bubble.right::after { left: -8px; transform: translateY(-50%) rotate(135deg); }
-  .bubble.left { order: 0; }
-  .device-wrap { order: 1; position: relative; max-width: 100%; }
-  .bubble.right { order: 2; }
+  .scene { position: relative; display: flex; justify-content: center; width: 100%; }
 
   /* Phone */
   .phone {
-    width: 292px; max-width: 100%;
-    min-height: 500px;
-    border: 9px solid var(--ink);
-    border-radius: 34px;
-    background: #fff;
-    padding: 0.9rem 0.95rem 1.1rem;
-    font-size: 0.9rem;
     position: relative;
+    width: 300px; max-width: 100%;
+    min-height: 520px;
+    border: 9px solid var(--ink); border-radius: 34px;
+    background: #fff;
+    padding: 0.9rem 1rem 1.2rem;
+    font-size: 0.92rem;
   }
-  .phone::before {
-    content: ""; display: block; width: 70px; height: 5px; border-radius: 4px;
-    background: var(--rule); margin: -0.25rem auto 0.8rem;
-  }
-  .p-app { font-size: 0.75rem; color: var(--ink-2); border-bottom: 1px solid var(--rule); padding-bottom: 0.45rem; margin-bottom: 0.8rem; }
-  .p-h { font-size: 1.12rem; font-weight: 800; line-height: 1.2; margin: 0 0 0.6rem; }
+  .phone::before { content: ""; display: block; width: 70px; height: 5px; border-radius: 4px; background: var(--rule); margin: -0.25rem auto 0.8rem; }
+  .p-app { font-size: 0.76rem; color: var(--ink-2); border-bottom: 1px solid var(--rule); padding-bottom: 0.45rem; margin-bottom: 0.8rem; }
+  .p-h { font-size: 1.15rem; font-weight: 800; line-height: 1.2; margin: 0 0 0.6rem; }
   .p-sub { color: var(--ink-2); margin: 0 0 0.8rem; }
+  .p-q { font-weight: 700; margin: 0 0 0.45rem; }
+  .p-prog { font-size: 0.76rem; color: var(--ink-2); margin: 0 0 0.25rem; }
   .p-list { list-style: none; margin: 0 0 0.9rem; padding: 0; }
-  .p-list li { padding: 0.45rem 0; border-bottom: 1px solid #e3eae7; display: flex; gap: 0.5rem; }
-  .p-list .ok { color: var(--parent); font-weight: 800; }
-  .p-list .no { color: var(--stamp); font-weight: 800; }
-  .p-link { color: var(--check); text-decoration: underline; font-size: 0.85rem; display: inline-block; margin-bottom: 0.9rem; }
+  .p-list li { padding: 0.45rem 0.25rem; border-bottom: 1px solid #e3eae7; display: flex; gap: 0.5rem; }
+  .ok { color: var(--ok); font-weight: 800; }
+  .no { color: var(--stamp); font-weight: 800; }
+  .flag { color: var(--check); font-weight: 800; }
   .p-btn {
-    display: block; width: 100%; text-align: center;
-    background: var(--ink); color: #fff; border-radius: 8px;
-    padding: 0.7rem; font-weight: 700; margin-top: 0.4rem;
+    display: block; width: 100%; text-align: center; cursor: pointer;
+    border: none; border-radius: 8px; padding: 0.75rem; font-weight: 700;
+    background: var(--ink); color: #fff; margin-top: 0.4rem;
   }
-  .p-btn.alt { background: var(--check); }
-  .p-btn.tap { box-shadow: 0 0 0 5px rgba(40, 70, 184, 0.25); }
-  .p-quiet { text-align: right; font-size: 0.8rem; color: var(--ink-2); text-decoration: underline; margin-top: 0.7rem; }
-  .p-chip { display: inline-block; font-size: 0.72rem; color: var(--check); background: #e9edfb; border-radius: 999px; padding: 0.15rem 0.55rem; margin-bottom: 0.55rem; }
-  .p-opt { border: 1px solid var(--rule); border-radius: 8px; padding: 0.55rem 0.7rem; margin-bottom: 0.4rem; }
-  .p-opt.on { border-color: var(--check); background: #e9edfb; font-weight: 600; }
-  .p-fix { background: #fbecee; border: 1px solid #e6b7bf; border-radius: 8px; padding: 0.7rem 0.75rem; margin-bottom: 0.8rem; }
+  .p-btn.blue { background: var(--check); }
+  .p-link { background: none; border: none; padding: 0; color: var(--check); text-decoration: underline; cursor: pointer; font-size: 0.86rem; display: inline-block; margin: 0 0 0.9rem; }
+  .p-quiet { display: block; margin: 0.8rem 0 0 auto; background: none; border: none; padding: 0; color: var(--ink-2); text-decoration: underline; font-size: 0.82rem; cursor: pointer; }
+  .p-chip { display: inline-block; font-size: 0.74rem; color: var(--check); background: var(--check-soft); border-radius: 999px; padding: 0.18rem 0.6rem; margin-bottom: 0.6rem; }
+  .p-answers { display: grid; gap: 0.4rem; }
+  .p-opt { text-align: left; cursor: pointer; border: 1px solid var(--rule); background: #fff; border-radius: 8px; padding: 0.6rem 0.75rem; }
+  .p-opt.on { border-color: var(--check); background: var(--check-soft); font-weight: 600; }
+  .p-done { font-size: 0.82rem; color: var(--ink-2); border-bottom: 1px solid #e3eae7; padding: 0.35rem 0; }
+  .p-done b { color: var(--ink); }
+  .p-fix { background: var(--stamp-soft); border: 1px solid #e6b7bf; border-radius: 8px; padding: 0.75rem 0.8rem; margin-bottom: 0.8rem; }
   .p-fix b { display: block; margin-bottom: 0.25rem; }
-  .p-trust { font-size: 0.84rem; margin: 0.7rem 0 0.4rem; }
-  .p-more { font-size: 0.8rem; color: var(--check); border-top: 1px solid var(--rule); padding-top: 0.5rem; }
-  .p-qa { padding: 0.5rem 0; border-bottom: 1px solid #e3eae7; }
-  .p-qa small { display: block; color: var(--ink-2); font-size: 0.75rem; }
-  .p-qa b { font-weight: 700; }
-  .reveal { animation: rise 0.35s ease-out both; }
-  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .p-trust { font-size: 0.86rem; margin: 0.75rem 0 0.4rem; padding: 0.2rem 0.25rem; }
+  .p-more { display: block; width: 100%; text-align: left; background: none; border: none; border-top: 1px solid var(--rule); padding: 0.5rem 0 0; color: var(--check); font-size: 0.84rem; cursor: pointer; }
+  .p-details { font-size: 0.82rem; color: var(--ink-2); padding-top: 0.4rem; }
+  .p-details ul { margin: 0.2rem 0 0.4rem; padding-left: 1.1rem; }
+  .toast { margin-top: 0.9rem; padding: 0.6rem 0.7rem; border-radius: 8px; background: var(--check-soft); font-size: 0.86rem; }
+  .toast.done { background: #e4f1ec; }
 
   /* Officer desk */
-  .desk { width: 520px; max-width: 100%; }
-  .monitor {
-    border: 8px solid var(--ink); border-radius: 10px; background: #fff;
-    display: grid; grid-template-columns: 150px minmax(0, 1fr);
-    min-height: 320px; font-size: 0.84rem; overflow: hidden;
-  }
-  .stand { width: 90px; height: 26px; margin: 0 auto; background: var(--ink); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
-  .m-side { background: #f1f4f3; border-right: 1px solid var(--rule); padding: 0.7rem 0.6rem; }
-  .m-side h4 { font-size: 0.74rem; margin: 0 0 0.45rem; color: var(--ink-2); font-weight: 600; }
+  .desk { width: 560px; max-width: 100%; }
+  .monitor { border: 8px solid var(--ink); border-radius: 10px; background: #fff; display: grid; grid-template-columns: 150px minmax(0, 1fr); min-height: 330px; font-size: 0.86rem; overflow: hidden; }
+  .stand { width: 90px; height: 24px; margin: 0 auto; background: var(--ink); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
+  .m-side { background: #f1f4f3; border-right: 1px solid var(--rule); padding: 0.75rem 0.6rem; }
+  .m-side p { font-size: 0.74rem; margin: 0 0 0.45rem; color: var(--ink-2); }
   .m-side ol { list-style: none; margin: 0; padding: 0; }
   .m-side li { padding: 0.35rem 0.45rem; border-radius: 6px; margin-bottom: 0.2rem; }
   .m-side li.on { background: #fff; border: 1px solid var(--rule); font-weight: 600; }
   .m-side li.more { color: var(--ink-2); font-size: 0.75rem; }
-  .m-main { padding: 0.75rem 0.85rem; }
-  .m-main h3 { font-size: 0.98rem; margin: 0 0 0.5rem; }
-  .m-row { display: flex; gap: 0.45rem; padding: 0.32rem 0; border-bottom: 1px solid #edf1ef; }
-  .m-row .ok { color: var(--parent); font-weight: 800; }
-  .m-row .no { color: var(--stamp); font-weight: 800; }
-  .m-row .flag { color: var(--check); font-weight: 800; }
-  .m-note { margin-top: 0.6rem; border: 1px dashed var(--rule); border-radius: 6px; padding: 0.5rem 0.6rem; color: var(--ink-2); }
+  .m-main { padding: 0.8rem 0.9rem; }
+  .m-main h3 { font-size: 1rem; margin: 0 0 0.5rem; }
+  .m-row { display: flex; gap: 0.45rem; padding: 0.4rem 0.3rem; border-bottom: 1px solid #edf1ef; }
+  .m-note { margin-top: 0.7rem; border: 1px dashed var(--rule); border-radius: 6px; padding: 0.5rem 0.6rem; color: var(--ink-2); }
   .m-note b { color: var(--ink); }
-  .m-actions { display: flex; gap: 0.5rem; margin-top: 0.7rem; }
-  .m-actions span { border: 1px solid var(--rule); border-radius: 6px; padding: 0.35rem 0.7rem; }
-  .m-actions .go { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .m-actions .ret { background: var(--stamp); color: #fff; border-color: var(--stamp); }
-  .m-timer { font-family: var(--mono); font-size: 0.75rem; color: var(--officer); margin-top: 0.5rem; }
+  .m-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+  .m-btn { cursor: pointer; border: 1px solid var(--rule); background: #fff; border-radius: 6px; padding: 0.45rem 0.8rem; font-weight: 600; }
+  .m-btn.ret { background: var(--stamp); color: #fff; border-color: var(--stamp); }
+  .m-btn.go { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .m-btn:disabled { opacity: 0.45; cursor: default; }
 
-  /* Stamp, the one big moment */
+  /* The returned stamp: the one big moment */
   .stamp {
-    position: absolute; left: 50%; top: 46%;
+    position: absolute; left: 50%; top: 52%;
     transform: translate(-50%, -50%) rotate(-9deg);
-    border: 5px solid var(--stamp); border-radius: 10px;
-    color: var(--stamp);
-    padding: 0.35rem 1.1rem 0.45rem;
-    text-align: center;
-    font-weight: 900; font-size: 2.3rem; letter-spacing: 0.06em; line-height: 1;
-    background: rgba(255, 255, 255, 0.55);
-    pointer-events: none;
-    opacity: 0;
+    border: 5px solid var(--stamp); border-radius: 10px; color: var(--stamp);
+    padding: 0.35rem 1.1rem 0.45rem; text-align: center;
+    font-weight: 900; font-size: 2.2rem; letter-spacing: 0.06em; line-height: 1;
+    background: rgba(255, 255, 255, 0.7); pointer-events: none;
+    animation: slam 0.42s cubic-bezier(.2,.9,.25,1.2) 0.9s both;
   }
-  .stamp small { display: block; font-size: 0.85rem; letter-spacing: 0.02em; font-weight: 700; margin-top: 0.3rem; }
-  .stamp.on { animation: slam 0.42s cubic-bezier(.2,.9,.25,1.2) 0.5s both; }
+  .stamp small { display: block; font-size: 0.8rem; letter-spacing: 0.02em; font-weight: 700; margin-top: 0.3rem; }
   @keyframes slam {
     0% { opacity: 0; transform: translate(-50%, -50%) rotate(-16deg) scale(1.9); }
     70% { opacity: 0.95; transform: translate(-50%, -50%) rotate(-8deg) scale(0.96); }
-    100% { opacity: 0.92; transform: translate(-50%, -50%) rotate(-9deg) scale(1); }
+    100% { opacity: 0.95; transform: translate(-50%, -50%) rotate(-9deg) scale(1); }
   }
 
-  /* Big cards (problem, test) */
-  .card {
-    width: 100%; max-width: 660px;
-    background: var(--paper-2);
-    border: 1px solid var(--rule);
+  /* Cards: problem, comparison, tests */
+  .card { width: 100%; max-width: 640px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: 1.5rem 1.6rem; }
+  .card .lead { font-size: clamp(1.45rem, 2.6vw, 2.05rem); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 1.1rem; max-width: 22ch; padding: 0.15rem 0.2rem; }
+  .card p { max-width: 60ch; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 0; padding: 0.3rem; }
+  .stats div { border-top: 2px solid var(--ink); padding-top: 0.45rem; }
+  .stats b { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+  .stats span { display: block; font-size: 0.86rem; }
+  .stats em { display: block; font-style: normal; font-size: 0.72rem; color: var(--ink-2); margin-top: 0.15rem; }
+  .src { font-size: 0.8rem; color: var(--ink-2); margin: 0.9rem 0 0; }
+
+  .cmp-row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.75rem; align-items: center; padding: 0.6rem 0.3rem; }
+  .cmp-row > b { font-size: 0.92rem; }
+  .cmp-track { position: relative; height: 46px; }
+  .cmp-line { position: absolute; top: 15px; height: 4px; border-radius: 2px; }
+  .cmp-dot { position: absolute; top: 9px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; border: 3px solid #fff; }
+  .cmp-lab { position: absolute; top: 28px; font-size: 0.72rem; white-space: nowrap; transform: translateX(-50%); color: var(--ink-2); }
+  .cmp-axis { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 0.75rem; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-2); padding: 0 0.3rem; }
+  .cmp-axis div { display: flex; justify-content: space-between; }
+
+  .tests { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0; font-size: 0.9rem; }
+  .tests th, .tests td { text-align: left; vertical-align: top; padding: 0.55rem 0.5rem 0.55rem 0.3rem; border-top: 1px solid var(--rule); }
+  .tests th { width: 8rem; font-weight: 700; }
+  .hyp { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.6rem; padding: 0.2rem; }
+  .limit { padding: 0.3rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.1rem; font-size: 0.9rem; margin-top: 0.8rem; }
+  .links a { color: var(--check); }
+
+  /* Spotlight and guide */
+  .spot {
+    position: fixed; z-index: 50; pointer-events: none;
     border-radius: 12px;
-    padding: 1.5rem 1.6rem;
+    box-shadow: 0 0 0 9999px rgba(16, 42, 39, 0.52);
+    transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease, opacity 0.2s;
   }
-  .card .lead { font-size: clamp(1.5rem, 2.6vw, 2.15rem); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 0.8rem; max-width: 24ch; }
-  .card p { margin: 0 0 0.7rem; max-width: 60ch; }
-  .card .src { font-size: 0.8rem; color: var(--ink-2); }
-  .tests { width: 100%; border-collapse: collapse; margin: 0.6rem 0 0.9rem; font-size: 0.9rem; }
-  .tests th, .tests td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem 0.5rem 0; border-top: 1px solid var(--rule); }
-  .tests th { width: 7.5rem; font-weight: 700; }
-  .card .hyp { font-size: 1.05rem; font-weight: 600; }
-  .card .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; font-size: 0.9rem; }
-  .card .links a { color: var(--check); }
-
-  /* Side panels */
-  .panel { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: 0.85rem 0.95rem; }
-  .panel h3 { font-size: 0.92rem; margin: 0 0 0.15rem; }
-  .panel .hint { font-size: 0.75rem; color: var(--ink-2); margin: 0 0 0.6rem; }
-  .log { list-style: none; margin: 0; padding: 0; font-size: 0.82rem; max-height: 260px; overflow: auto; }
-  .log li { display: grid; grid-template-columns: 5.4rem minmax(0, 1fr); gap: 0.5rem; padding: 0.3rem 0; border-top: 1px solid #dde6e2; }
-  .log li time { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-2); padding-top: 0.1rem; }
-  .log li.new { animation: rise 0.3s ease-out both; }
-  .log li.new span { font-weight: 600; }
-  .log .empty { display: block; color: var(--ink-2); border: 0; }
-  .facts { margin: 0; font-size: 0.85rem; }
-  .facts div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.15rem 0.75rem; padding: 0.4rem 0; border-top: 1px solid #dde6e2; }
-  .facts dt { color: var(--ink-2); }
-  .facts dd { margin: 0; font-weight: 700; text-align: right; }
-  .facts .tag { grid-column: 1 / -1; font-size: 0.72rem; color: var(--ink-2); }
-  .facts .tag[data-src="course"] { color: var(--parent); }
-  .facts .tag[data-src="made up"] { color: var(--stamp); }
-
-  /* Service map */
-  .map { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: 0.6rem 0.9rem 0.3rem; }
-  .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.3rem 1rem; font-size: 0.8rem; color: var(--ink-2); }
-  .map-head b { color: var(--ink); font-size: 0.9rem; }
-  .key { display: flex; gap: 0.9rem; flex-wrap: wrap; }
-  .key i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 0.3rem; border-radius: 2px; }
-  #bp { width: 100%; height: auto; display: block; }
-  #bp .lane { stroke: var(--rule); stroke-width: 1; }
-  #bp .lane-label { font-size: 13px; fill: var(--ink-2); font-family: var(--sans); }
-  #bp .tick { font-size: 11px; fill: var(--ink-2); font-family: var(--mono); }
-  #bp .tickline { stroke: var(--rule); stroke-dasharray: 2 4; }
-  #bp .seg { fill: none; stroke-width: 2.5; stroke-linecap: round; transition: opacity 0.3s; }
-  #bp .seg.today { stroke: var(--ink-2); }
-  #bp .seg.return { stroke: var(--stamp); stroke-dasharray: 6 5; }
-  #bp .seg.check { stroke: var(--check); }
-  #bp .seg.edge { stroke: var(--officer); stroke-dasharray: 3 4; }
-  #bp .node { stroke: #fff; stroke-width: 2; transition: opacity 0.3s; }
-  #bp .node.today { fill: var(--ink-2); }
-  #bp .node.check { fill: var(--check); }
-  #bp .node.edge { fill: var(--officer); }
-  #bp .node.T3 { fill: var(--stamp); }
-  #bp .dim { opacity: 0.18; }
-  #bp .ghost { opacity: 0.45; }
-  #bp .focus-ring { fill: none; stroke: var(--ink); stroke-width: 2; }
-  #bp .focus-label { font-size: 13px; font-weight: 700; fill: var(--ink); font-family: var(--sans); }
-
-  /* Player */
-  .player {
-    position: sticky; bottom: 0;
-    display: grid;
-    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 1.5rem;
-    background: var(--paper-2);
-    border-top: 1px solid var(--rule);
+  .spot[hidden] { display: block; opacity: 0; }
+  .spot.act::after {
+    content: ""; position: absolute; inset: -4px; border-radius: 14px;
+    border: 3px solid #ffd166;
+    animation: pulse 1.4s ease-out infinite;
   }
-  .player button {
-    border: 1px solid var(--ink); background: #fff; border-radius: 8px;
-    padding: 0.45rem 0.9rem; cursor: pointer; font-weight: 600; font-size: 0.9rem;
-  }
-  .player button.primary { background: var(--ink); color: var(--paper-2); }
-  .player button:disabled { opacity: 0.35; cursor: default; }
-  .bar { position: relative; height: 6px; background: var(--rule); border-radius: 4px; cursor: pointer; }
-  .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); border-radius: 4px; width: 0; }
-  .bar .mark { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--ink-2); }
-  .count { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-2); white-space: nowrap; }
+  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.12); } }
 
-  @media (max-width: 1000px) {
-    .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "stage" "map" "side"; }
-    .side { flex-direction: row; flex-wrap: wrap; }
-    .side .panel { flex: 1 1 280px; }
+  .conn {
+    position: fixed; z-index: 55; height: 0; pointer-events: none;
+    border-top: 2px dashed #ffd166;
+    transition: top 0.35s ease, left 0.35s ease, width 0.35s ease;
   }
-  @media (max-width: 640px) {
-    .top, .layout { padding-left: 0.9rem; padding-right: 0.9rem; }
-    .set { min-height: 0; padding-top: 2.8rem; }
-    .bubble.left, .bubble.right { order: 0; }
-    .bubble::after { display: none; }
-    .player { grid-template-columns: auto auto minmax(0, 1fr) auto; padding: 0.6rem 0.9rem; }
-    .player .count { display: none; }
+  .conn[hidden] { display: none; }
+  .guide {
+    position: fixed; z-index: 60;
+    width: var(--guide-w);
+    background: #fff; color: var(--ink);
+    border-radius: 14px;
+    padding: 1rem 1.05rem 0.9rem;
+    box-shadow: 0 12px 32px rgba(16, 42, 39, 0.28);
+    transition: top 0.35s ease, left 0.35s ease;
+  }
+  .g-meta { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--ink-2); margin-bottom: 0.3rem; }
+  .g-title { font-size: 1.12rem; line-height: 1.2; margin: 0 0 0.35rem; font-weight: 800; }
+  .g-body { margin: 0; font-size: 0.95rem; }
+  .g-quote { margin: 0.6rem 0 0; padding-left: 0.65rem; border-left: 3px solid var(--rule); font-size: 0.88rem; color: var(--ink-2); }
+  .g-quote[hidden], .g-feedback[hidden], .g-skip[hidden] { display: none; }
+  .g-feedback { margin: 0.6rem 0 0; font-size: 0.86rem; background: #fff6d8; border-radius: 8px; padding: 0.45rem 0.6rem; }
+  .g-actions { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-top: 0.85rem; }
+  .g-actions .right { display: flex; align-items: center; gap: 0.6rem; }
+  .g-btn { cursor: pointer; border: 1px solid var(--ink); background: #fff; border-radius: 8px; padding: 0.42rem 0.9rem; font-weight: 600; font-size: 0.9rem; }
+  .g-btn.primary { background: var(--ink); color: #fff; }
+  .g-btn:disabled { visibility: hidden; }
+  .g-hint { font-size: 0.86rem; font-weight: 700; color: var(--check); }
+  .g-skip { background: none; border: none; padding: 0; font-size: 0.78rem; color: var(--ink-2); text-decoration: underline; cursor: pointer; }
+  .g-arrow { position: absolute; width: 16px; height: 16px; background: #fff; transform: rotate(45deg); }
+  .g-arrow[hidden] { display: none; }
+
+  /* Narrow screens: no guide lane; the guide docks at the bottom */
+  @media (max-width: 899px) {
+    .stage { grid-template-columns: minmax(0, 1fr); padding: 1rem 0.9rem 1rem; }
+    .guide { width: min(560px, calc(100vw - 24px)); }
+    .top h1 { display: none; }
+    .top-in { padding: 0.5rem 0.9rem; }
+  }
+  @media (max-width: 560px) {
     .monitor { grid-template-columns: minmax(0, 1fr); }
     .m-side { display: none; }
+    .stats { grid-template-columns: minmax(0, 1fr); }
+    .cmp-row, .cmp-axis { grid-template-columns: 5.5rem minmax(0, 1fr); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .log li.new { animation: none; }
-    .stamp.on { animation: none; opacity: 0.92; }
-    #bp .seg, #bp .node { transition: none; }
+    .spot, .guide, .progress i { transition: none; }
+    .spot.act::after { animation: none; }
+    .stamp { animation: none; }
   }
 </style>
 </head>
@@ -362,65 +257,42 @@
 <div class="banner" role="note">Prototype walkthrough. Every person, case, time and number marked "made up" is synthetic. Not a real ICA service.</div>
 
 <header class="top">
-  <div>
+  <div class="top-in">
     <h1>Passport Ready Check</h1>
-    <p>Prototype walkthrough for Scenario B, ICA passport applications</p>
+    <nav aria-label="Chapters"><ol class="chapters" id="chapters"></ol></nav>
   </div>
-  <nav aria-label="Chapters"><ol class="chapters" id="chapters"></ol></nav>
+  <div class="progress"><i id="prog"></i></div>
 </header>
 
-<main class="layout">
-  <section class="stage" aria-live="polite">
-    <div class="scene-head">
-      <span class="track" id="track"></span>
-      <h2 id="title"></h2>
-      <p id="narration"></p>
+<main class="stage">
+  <div class="scene-col">
+    <div class="context" id="context">
+      <span class="who" id="who"></span>
+      <span class="clock" id="t-clock"><b id="clockDay"></b> <span id="clockTime"></span></span>
     </div>
-    <div class="set" id="set">
-      <span class="set-note" id="setNote"></span>
-      <div class="clock" id="clock" aria-label="Case clock"><span>Case clock</span><b id="clockDay">Day 0</b><span id="clockTime"></span></div>
-      <div class="bubble left" id="bubble" hidden><span class="who" id="bubbleWho"></span><p id="bubbleText"></p></div>
-      <div class="device-wrap" id="deviceWrap">
-        <div id="device"></div>
-        <div class="stamp" id="stamp" aria-hidden="true">RETURNED<small>Day 6, about six days lost</small></div>
-      </div>
-    </div>
-  </section>
-
-  <aside class="side">
-    <section class="panel">
-      <h3 id="logTitle">Case log</h3>
-      <p class="hint" id="logHint">A made-up case</p>
-      <ol class="log" id="log"></ol>
-    </section>
-    <section class="panel">
-      <h3>The numbers behind this step</h3>
-      <p class="hint">"course" is from the course brief. "made up" is synthetic. "design" is a choice in our design.</p>
-      <dl class="facts" id="facts"></dl>
-    </section>
-  </aside>
-
-  <section class="map" aria-label="Service map of the journey">
-    <div class="map-head">
-      <b>Where the time goes</b>
-      <span class="key">
-        <span><i style="background:var(--ink-2)"></i>Today</span>
-        <span><i style="background:var(--stamp)"></i>Returned</span>
-        <span><i style="background:var(--check)"></i>With the check</span>
-        <span><i style="background:var(--officer)"></i>Handed to an officer</span>
-      </span>
-    </div>
-    <svg id="bp" viewBox="0 0 1000 168" role="img" aria-label="Three lanes, parent, the check and ICA officer, on a day 0 to day 6 axis"></svg>
-  </section>
+    <div class="scene" id="scene"></div>
+  </div>
 </main>
 
-<footer class="player">
-  <button type="button" id="prev">Back</button>
-  <button type="button" id="play" class="primary" aria-pressed="false">Play</button>
-  <div class="bar" id="bar" role="slider" tabindex="0" aria-label="Walkthrough progress" aria-valuemin="1" aria-valuemax="11" aria-valuenow="1"><i id="barFill"></i></div>
-  <span class="count" id="count"></span>
-  <button type="button" id="next" class="primary">Next</button>
-</footer>
+<div class="spot" id="spot" hidden></div>
+<div class="conn" id="conn" hidden aria-hidden="true"></div>
+
+<section class="guide" id="guide" role="region" aria-label="Guide" aria-live="polite">
+  <div class="g-meta"><span id="gChapter"></span><span id="gCount"></span></div>
+  <h2 class="g-title" id="gTitle"></h2>
+  <p class="g-body" id="gBody"></p>
+  <p class="g-quote" id="gQuote" hidden></p>
+  <p class="g-feedback" id="gFeedback" hidden></p>
+  <div class="g-actions">
+    <button type="button" class="g-btn" id="gBack">Back</button>
+    <div class="right">
+      <span class="g-hint" id="gHint"></span>
+      <button type="button" class="g-skip" id="gSkip" hidden>Skip</button>
+      <button type="button" class="g-btn primary" id="gNext">Next</button>
+    </div>
+  </div>
+  <i class="g-arrow" id="gArrow" hidden></i>
+</section>
 
 <noscript><p style="padding:1rem">This walkthrough needs JavaScript. The plain screens are in index.html and index-lean.html.</p></noscript>
 
@@ -428,534 +300,627 @@
 (function () {
   "use strict";
 
-  /* ---------- Screens ---------- */
-  var S = {};
-
-  S.problem = function () {
-    return '<div class="card">' +
-      '<p class="lead">A parent renewing a child\'s passport finds out what "complete" means six days too late.</p>' +
-      '<p>About 26% of child passport applications come back for errors, roughly 650 a week. Each return adds about six days. The guidance covers every case on one long page, and only 38% of applicants read it.</p>' +
-      '<p>The most common reason a child\'s application comes back is missing consent from the second parent.</p>' +
-      '<p class="src">26%, 650 a week and the consent finding are made up. Six days and 38% are from the course brief.</p>' +
-      '</div>';
+  /* ---------------- Scenes ---------------- */
+  var QUESTIONS = {
+    2: { q: "Is your child a Singapore citizen?", a: [["yes", "Yes"], ["no", "No"], ["unsure", "Not sure"]] },
+    3: { q: "Can both parents give consent?", a: [["yes", "Yes"], ["no", "No"], ["unsure", "Not sure"]] },
+    4: { q: "Is either parent overseas right now?", a: [["no", "No"], ["yes", "Yes"], ["unsure", "Not sure"]] }
   };
+  var ANSWERED = { 1: "Renewal of my child's passport", 2: "Yes, a Singapore citizen", 3: "Yes, both can give consent", 4: "No, neither is overseas" };
 
-  S.phoneToday = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Passport application (made up)</div>' +
-      '<p class="p-h">Review and submit</p>' +
-      '<p class="p-sub">Renewal for a child under 16</p>' +
-      '<ul class="p-list">' +
-        '<li><span class="ok">✓</span>Child\'s current passport uploaded</li>' +
-        '<li><span class="ok">✓</span>Passport photo uploaded</li>' +
-      '</ul>' +
-      '<span class="p-link">Guidance for all applicants (long page)</span>' +
-      '<span class="p-btn tap">Submit application</span>' +
-      '</div>';
-  };
-
-  S.deskReturn = function () {
+  function desk(rows, note, footer, buttons) {
     return '<div class="desk"><div class="monitor">' +
-      '<div class="m-side"><h4>Child applications today</h4><ol>' +
+      '<div class="m-side"><p>Child applications today</p><ol>' +
         '<li class="on">C-0417 renewal</li><li>C-0418 first passport</li><li>C-0419 renewal</li><li class="more">and 497 more (made up)</li>' +
       '</ol></div>' +
-      '<div class="m-main"><h3>C-0417, child renewal (made up)</h3>' +
+      '<div class="m-main"><h3>C-0417, child renewal (made up)</h3>' + rows + note +
+        '<div class="m-actions">' + buttons + '</div>' + footer +
+      '</div></div><div class="stand"></div></div>';
+  }
+
+  var SCENES = {
+    problem: function () {
+      return '<div class="card">' +
+        '<p class="lead" id="t-lead">Parents renewing a child\'s passport find out what "complete" means six days too late.</p>' +
+        '<div class="stats" id="t-stats">' +
+          '<div><b>26%</b><span>of child applications come back</span><em>made up</em></div>' +
+          '<div><b>6 days</b><span>added by each return</span><em>course brief</em></div>' +
+          '<div><b>38%</b><span>of applicants read the guidance</span><em>course brief</em></div>' +
+        '</div>' +
+        '<p class="src">The most common reason a child\'s application comes back is missing consent from the second parent (made up).</p>' +
+        '</div>';
+    },
+
+    today: function (st) {
+      return '<div class="phone">' +
+        '<div class="p-app">Passport application (made up)</div>' +
+        '<p class="p-h">Review and submit</p>' +
+        '<p class="p-sub">Renewal for a child under 16</p>' +
+        '<ul class="p-list">' +
+          '<li><span class="ok">✓</span>Child\'s current passport uploaded</li>' +
+          '<li><span class="ok">✓</span>Passport photo uploaded</li>' +
+        '</ul>' +
+        '<button type="button" class="p-link" id="t-guidance" data-act="guidance">Guidance for all applicants (one long page)</button>' +
+        (st.submitted
+          ? '<div class="toast">Submitted. An officer will review your application.</div>'
+          : '<button type="button" class="p-btn" id="t-submit" data-act="submit">Submit application</button>') +
+        '</div>';
+    },
+
+    deskReturn: function (st) {
+      var rows =
         '<div class="m-row"><span class="ok">✓</span>Child\'s current passport</div>' +
         '<div class="m-row"><span class="ok">✓</span>Passport photo</div>' +
-        '<div class="m-row"><span class="no">✗</span>Second parent\'s consent not received</div>' +
-        '<div class="m-note"><b>Return notice.</b> Your application is incomplete. The second parent\'s consent was not received. Please ask them to give consent online and submit again.</div>' +
-        '<div class="m-actions"><span class="ret">Return to applicant</span><span>Approve</span></div>' +
-        '<div class="m-timer">Writing the notice: 12 min (made up)</div>' +
-      '</div>' +
-      '</div><div class="stand"></div></div>';
-  };
+        '<div class="m-row" id="t-missing"><span class="no">✗</span>Second parent\'s consent not received</div>';
+      var note = st.returned
+        ? '<div class="m-note"><b>Return notice sent.</b> Your application is incomplete. The second parent\'s consent was not received. Please ask them to give consent online and submit again.</div>'
+        : '';
+      var buttons = '<button type="button" class="m-btn ret" id="t-return" data-act="return"' + (st.returned ? ' disabled' : '') + '>Return to applicant</button>' +
+                    '<button type="button" class="m-btn" data-act="approve-wrong"' + (st.returned ? ' disabled' : '') + '>Approve</button>';
+      return desk(rows, note, '', buttons);
+    },
 
-  S.phoneNotice = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Passport application (made up)</div>' +
-      '<p class="p-h">Your application has been returned</p>' +
-      '<ul class="p-list"><li><span class="no">✗</span>The second parent\'s consent was not received.</li></ul>' +
-      '<p class="p-sub">Ask the other parent to give consent online, then submit again. Your application goes back into the queue.</p>' +
-      '<span class="p-btn">Start again</span>' +
-      '</div>';
-  };
+    notice: function () {
+      return '<div class="phone">' +
+        '<div class="p-app">Passport application (made up)</div>' +
+        '<p class="p-h">Your application has been returned</p>' +
+        '<ul class="p-list"><li><span class="no">✗</span>The second parent\'s consent was not received.</li></ul>' +
+        '<p class="p-sub">Ask the other parent to give consent online, then submit again. Your application goes back into the queue.</p>' +
+        '<button type="button" class="p-btn" data-act="start-again">Submit again</button>' +
+        '<div class="stamp" aria-hidden="true">RETURNED<small>about six days lost</small></div>' +
+        '</div>';
+    },
 
-  S.phoneIntro = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Review your application (made up)</div>' +
-      '<span class="p-chip">Shown because this application is for a child under 16</span>' +
-      '<p class="p-h">Passport Ready Check</p>' +
-      '<p class="p-sub">A free check that works for you. It is not a gate. It never opens your documents.</p>' +
-      '<p style="margin:0 0 0.4rem;font-weight:700">What are you applying for?</p>' +
-      '<div class="p-opt on">Renewal of my child\'s passport</div>' +
-      '<div class="p-opt">My child\'s first passport</div>' +
-      '<div class="p-opt">Replacing a lost or damaged passport</div>' +
-      '<div class="p-opt">Not sure</div>' +
-      '<div class="p-quiet">Submit anyway</div>' +
-      '</div>';
-  };
+    q1: function (st) {
+      var a = [["renewal", "Renewal of my child's passport"], ["first", "My child's first passport"], ["lost", "Replacing a lost or damaged passport"], ["unsure", "Not sure"]];
+      return '<div class="phone">' +
+        '<div class="p-app">Review your application (made up)</div>' +
+        '<span class="p-chip" id="t-chip">Shown because this application is for a child under 16</span>' +
+        '<p class="p-h">Passport Ready Check</p>' +
+        '<p class="p-sub">A free check that works for you. It is not a gate. It never opens your documents.</p>' +
+        '<p class="p-prog">Question 1 of up to 4</p>' +
+        '<p class="p-q">What are you applying for?</p>' +
+        '<div class="p-answers" id="t-answers">' + a.map(function (x) {
+          return '<button type="button" class="p-opt' + (st.pick === x[0] ? ' on' : '') + '" data-act="q1:' + x[0] + '">' + x[1] + '</button>';
+        }).join("") + '</div>' +
+        '<button type="button" class="p-quiet" data-act="anyway">Submit anyway</button>' +
+        '</div>';
+    },
 
-  S.phoneQuestions = function () {
-    var qa = [
-      ["What are you applying for?", "Renewal of my child's passport"],
-      ["Is your child a Singapore citizen?", "Yes"],
-      ["Can both parents give consent?", "Yes"],
-      ["Is either parent overseas right now?", "No"]
-    ];
-    var rows = qa.map(function (r, i) {
-      return '<div class="p-qa reveal" style="animation-delay:' + (0.25 + i * 0.55) + 's"><small>Question ' + (i + 1) + ' of up to 4. ' + r[0] + '</small><b>' + r[1] + '</b></div>';
-    }).join("");
-    return '<div class="phone">' +
-      '<div class="p-app">Passport Ready Check (made up)</div>' +
-      '<p class="p-h">About your situation</p>' +
-      rows +
-      '<p class="p-sub reveal" style="margin-top:0.8rem;animation-delay:2.6s">No names, NRIC or passport numbers. Just these four answers.</p>' +
-      '</div>';
-  };
+    questions: function (st) {
+      var n = st.q;
+      var done = "";
+      for (var i = 1; i < n; i++) done += '<div class="p-done">Question ' + i + ': <b>' + ANSWERED[i] + '</b></div>';
+      var Q = QUESTIONS[n];
+      return '<div class="phone">' +
+        '<div class="p-app">Passport Ready Check (made up)</div>' + done +
+        '<p class="p-prog" style="margin-top:0.8rem">Question ' + n + ' of up to 4</p>' +
+        '<p class="p-q">' + Q.q + '</p>' +
+        '<div class="p-answers" id="t-answers">' + Q.a.map(function (x) {
+          return '<button type="button" class="p-opt" data-act="q' + n + ':' + x[0] + '">' + x[1] + '</button>';
+        }).join("") + '</div>' +
+        '<p class="p-sub" style="margin-top:0.8rem;font-size:0.82rem">No names, NRIC or passport numbers. Just these answers.</p>' +
+        '</div>';
+    },
 
-  S.phoneFix = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Renewal for your child (made up). <u>Change answers</u></div>' +
-      '<p class="p-h">One thing to fix before you submit</p>' +
-      '<div class="p-fix"><b>Your child\'s other parent hasn\'t given consent yet.</b>Ask them to give consent online, then come back and submit (made-up step).</div>' +
-      '<span class="p-btn alt">Back to my application</span>' +
-      '<p class="p-trust">This check doesn\'t approve applications. An ICA officer decides.</p>' +
-      '<div class="p-more">What we checked</div>' +
-      '<div class="p-quiet">Submit anyway</div>' +
-      '</div>';
-  };
+    fix: function (st) {
+      return '<div class="phone">' +
+        '<div class="p-app">Renewal for your child (made up)</div>' +
+        '<p class="p-h">One thing to fix before you submit</p>' +
+        '<div class="p-fix" id="t-fix"><b>Your child\'s other parent hasn\'t given consent yet.</b>Ask them to give consent online, then come back and submit (made-up step).</div>' +
+        (st.back
+          ? '<div class="toast done">Twenty minutes later, the other parent gives consent online (made up).</div>'
+          : '<button type="button" class="p-btn blue" id="t-back" data-act="back">Back to my application</button>') +
+        '<p class="p-trust" id="t-trust">This check doesn\'t approve applications. An ICA officer decides.</p>' +
+        '<button type="button" class="p-more" id="t-more" data-act="more" aria-expanded="' + (st.more ? "true" : "false") + '">What we checked</button>' +
+        (st.more ? '<div class="p-details"><ul><li>Child\'s current passport: there</li><li>Passport photo: there (quality not checked)</li><li>Second parent\'s consent: not yet</li></ul>Reads no documents. Rules as of 1 Nov 2026 (made up).</div>' : '') +
+        '<button type="button" class="p-quiet" data-act="anyway">Submit anyway</button>' +
+        '</div>';
+    },
 
-  S.phoneComplete = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Renewal for your child (made up). <u>Change answers</u></div>' +
-      '<p class="p-h">Looks complete for the items below</p>' +
-      '<ul class="p-list">' +
-        '<li><span class="ok">✓</span>Child\'s current passport</li>' +
-        '<li><span class="ok">✓</span>Passport photo (quality not checked)</li>' +
-        '<li><span class="ok">✓</span>Second parent\'s consent given</li>' +
-      '</ul>' +
-      '<p class="p-sub">An officer will confirm the consent is valid.</p>' +
-      '<span class="p-btn tap">Submit application</span>' +
-      '<p class="p-trust">This check doesn\'t approve applications. An ICA officer decides.</p>' +
-      '</div>';
-  };
+    complete: function (st) {
+      return '<div class="phone">' +
+        '<div class="p-app">Renewal for your child (made up)</div>' +
+        '<p class="p-h">Looks complete for the items below</p>' +
+        '<ul class="p-list">' +
+          '<li><span class="ok">✓</span>Child\'s current passport</li>' +
+          '<li><span class="ok">✓</span>Passport photo (quality not checked)</li>' +
+          '<li id="t-consent"><span class="flag">?</span>Second parent\'s consent given. An officer confirms it is valid.</li>' +
+        '</ul>' +
+        (st.submitted
+          ? '<div class="toast">Submitted, complete. An officer will review it.</div>'
+          : '<button type="button" class="p-btn" id="t-submit2" data-act="submit">Submit application</button>') +
+        '<p class="p-trust">This check doesn\'t approve applications. An ICA officer decides.</p>' +
+        '</div>';
+    },
 
-  S.deskComplete = function () {
-    return '<div class="desk"><div class="monitor">' +
-      '<div class="m-side"><h4>Child applications today</h4><ol>' +
-        '<li class="on">C-0417 renewal</li><li>C-0418 first passport</li><li>C-0419 renewal</li><li class="more">and 497 more (made up)</li>' +
-      '</ol></div>' +
-      '<div class="m-main"><h3>C-0417, child renewal (made up)</h3>' +
+    deskComplete: function (st) {
+      var rows =
         '<div class="m-row"><span class="ok">✓</span>Child\'s current passport</div>' +
         '<div class="m-row"><span class="ok">✓</span>Passport photo</div>' +
-        '<div class="m-row"><span class="flag">?</span>Second parent\'s consent given. Officer to confirm it is valid</div>' +
-        '<div class="m-note"><b>Officer\'s call.</b> Consent checked and valid. The check flagged it; the officer confirms it.</div>' +
-        '<div class="m-actions"><span>Return to applicant</span><span class="go">Approve</span></div>' +
-        '<div class="m-timer">Nothing to return. No notice written.</div>' +
-      '</div>' +
-      '</div><div class="stand"></div></div>';
+        '<div class="m-row" id="t-flag"><span class="flag">?</span>Second parent\'s consent given. Officer to confirm it is valid</div>';
+      var note = st.approved ? '<div class="m-note"><b>Decided.</b> Consent confirmed valid. No return notice needed.</div>' : '';
+      var buttons = '<button type="button" class="m-btn" data-act="return-wrong"' + (st.approved ? ' disabled' : '') + '>Return to applicant</button>' +
+                    '<button type="button" class="m-btn go" id="t-approve" data-act="approve"' + (st.approved ? ' disabled' : '') + '>Approve</button>';
+      return desk(rows, note, '', buttons);
+    },
+
+    compare: function () {
+      var X = function (d) { return (d / 6 * 100) + "%"; };
+      function row(label, color, segs, dots) {
+        return '<div class="cmp-row"><b>' + label + '</b><div class="cmp-track">' +
+          segs.map(function (s) { return '<span class="cmp-line" style="left:' + X(s[0]) + ';width:calc(' + X(s[1] - s[0]) + ');background:' + s[2] + (s[3] ? ';background:repeating-linear-gradient(90deg,' + s[2] + ' 0 7px,transparent 7px 12px)' : '') + '"></span>'; }).join("") +
+          dots.map(function (d) {
+            var shift = d[0] === 0 ? "0" : d[0] === 6 ? "-100%" : "-50%";
+            return '<span class="cmp-dot" style="left:' + X(d[0]) + ';background:' + d[1] + '"></span><span class="cmp-lab" style="left:' + X(d[0]) + ';transform:translateX(' + shift + ')">' + d[2] + '</span>';
+          }).join("") +
+          '</div></div>';
+      }
+      return '<div class="card" id="t-compare">' +
+        '<p class="hyp" style="padding:0.3rem">Same parent, same case. The check moves the moment you learn what\'s missing from day 3 to day 0.</p>' +
+        '<div class="cmp-axis"><span></span><div><span>Day 0</span><span>Day 3</span><span>Day 6</span></div></div>' +
+        '<div id="t-today">' + row("Today", "#4a5f5a",
+          [[0, 3, "#4a5f5a"], [3, 6, "#b42339", true]],
+          [[0, "#4a5f5a", "Submits"], [3, "#b42339", "Returned"], [6, "#b42339", "Submits again"]]) + '</div>' +
+        '<div id="t-with">' + row("With the check", "#2846b8",
+          [[0, 3, "#2846b8"]],
+          [[0, "#2846b8", "Fixes, then submits"], [3, "#0f6e5a", "Officer decides"]]) + '</div>' +
+        '<p class="src">Both timelines are made up. Today\'s case is still waiting for a second review after day 6.</p>' +
+        '</div>';
+    },
+
+    edgeQ4: function () {
+      var Q = QUESTIONS[4];
+      return '<div class="phone">' +
+        '<div class="p-app">Passport Ready Check (made up)</div>' +
+        '<div class="p-done">Question 1: <b>Renewal of my child\'s passport</b></div>' +
+        '<div class="p-done">Question 2: <b>Yes, a Singapore citizen</b></div>' +
+        '<div class="p-done">Question 3: <b>Yes, both can give consent</b></div>' +
+        '<p class="p-prog" style="margin-top:0.8rem">Question 4 of up to 4</p>' +
+        '<p class="p-q">' + Q.q + '</p>' +
+        '<div class="p-answers" id="t-answers">' + Q.a.map(function (x) {
+          return '<button type="button" class="p-opt" data-act="edge:' + x[0] + '">' + x[1] + '</button>';
+        }).join("") + '</div>' +
+        '</div>';
+    },
+
+    stop: function () {
+      return '<div class="phone">' +
+        '<div class="p-app">Passport Ready Check (made up)</div>' +
+        '<p class="p-h">Your situation needs a person</p>' +
+        '<p class="p-sub">A parent is overseas, so an ICA officer needs to look at your case. This check won\'t guess.</p>' +
+        '<button type="button" class="p-btn blue" id="t-officer" data-act="officer">Contact an ICA officer (made-up route)</button>' +
+        '<p class="p-trust" style="margin-top:0.9rem">No checklist is shown, because it might be wrong for your case.</p>' +
+        '</div>';
+    },
+
+    tests: function () {
+      return '<div class="card">' +
+        '<p class="hyp" id="t-hyp">We are testing whether a short checklist for each situation, shown before Submit, catches most of the reasons child applications come back, without reading any documents.</p>' +
+        '<table class="tests" id="t-tests">' +
+          '<tr><th>Will the logic work?</th><td>Tag 200 made-up returned applications with their reason, and whether the checklist catches it. Continue at 50% or more; stop below 40%. By 1 Dec 2026.</td></tr>' +
+          '<tr><th>Will parents act on it?</th><td>Show the result screen to five people. Pass if 4 of 5 name the next step within 10 seconds and nobody reads it as approval.</td></tr>' +
+          '<tr><th>Only if both pass</th><td>A 50/50 pilot. Target: the whole treatment group gains 8 points or more on first-time acceptance, about 74% to 82%, by 12 Jan 2027.</td></tr>' +
+        '</table>' +
+        '<p class="src limit" id="t-limit">The limit we accept: the 200 cases are written by us, so they test our own guess at why applications fail. Real return data is the real test. Photo problems, 28% of child returns, are out of reach for a checklist. All targets and shares here are made up.</p>' +
+        '<div class="links"><a href="index-lean.html">Open the lean result screen</a><a href="index.html">Open the full result screen</a><a href="PLAN.md">Read the plan</a></div>' +
+        '</div>';
+    }
   };
 
-  S.phoneStop = function () {
-    return '<div class="phone">' +
-      '<div class="p-app">Passport Ready Check (made up)</div>' +
-      '<p class="p-h">Your situation needs a person</p>' +
-      '<p class="p-sub">A parent is overseas, so an ICA officer needs to look at your case. This check won\'t guess.</p>' +
-      '<span class="p-btn alt">Contact an ICA officer (made-up route)</span>' +
-      '<div class="p-qa" style="margin-top:0.9rem"><small>Your answers</small>Renewal. Citizen. Both can consent. <b>A parent is overseas.</b> <u>Change</u></div>' +
-      '<p class="p-trust">No checklist is shown, because it might be wrong for your case.</p>' +
-      '</div>';
-  };
-
-  S.test = function () {
-    return '<div class="card">' +
-      '<p class="hyp">We are testing whether a short checklist for each situation, shown before Submit, catches most of the reasons child applications come back, without reading any documents.</p>' +
-      '<table class="tests">' +
-        '<tr><th>Will the logic work?</th><td>Tag 200 made-up returned applications with their reason and whether the checklist catches it. Continue if it catches 50% or more; stop below 40%. By 1 Dec 2026.</td></tr>' +
-        '<tr><th>Will parents act on it?</th><td>Show the result screen to five people. Pass if 4 of 5 name the next step within 10 seconds and nobody reads it as approval.</td></tr>' +
-        '<tr><th>Only if both pass</th><td>A 50/50 pilot. Target: the whole treatment group gains 8 points or more on first-time acceptance, about 74% to 82%, by 12 Jan 2027.</td></tr>' +
-      '</table>' +
-      '<p class="src">The limit we accept: the 200 cases are written by us, so they test our own guess at why applications fail. Real return data is the real test. Photo problems, 28% of child returns, are out of reach for a checklist. All targets and shares here are made up.</p>' +
-      '<div class="links"><a href="index-lean.html">Open the lean result screen</a><a href="index.html">Open the full result screen</a><a href="PLAN.md">Read the plan</a></div>' +
-      '</div>';
-  };
-
-  /* ---------- Script ---------- */
-  var CHAPTERS = [
-    { name: "The problem", at: 0 },
-    { name: "Today", at: 1 },
-    { name: "With the check", at: 4 },
-    { name: "Fixed first time", at: 7 },
-    { name: "Needs a person", at: 9 },
-    { name: "What we test", at: 10 }
-  ];
+  /* ---------------- Tour ---------------- */
+  var CHAPTERS = ["The problem", "Today", "With the check", "Fixed first time", "Needs a person", "What we test"];
 
   var STEPS = [
-    { track: "all", label: "Scenario B, ICA passport applications", title: "The problem we're solving",
-      text: "Follow one made-up renewal twice: once as it works today, and once with the Passport Ready Check just before Submit.",
-      screen: "problem", clock: null, focus: null,
-      facts: [["Child applications returned a week", "about 650", "made up"], ["Days added per return", "about 6", "course"], ["Applicants who read the guidance", "38%", "course"], ["Until the vendor channel closes", "10 weeks", "course"]],
-      log: [] },
+    { ch: 0, scene: "problem", target: "#t-lead",
+      title: "The problem",
+      body: "We'll follow one made-up child renewal twice: once as it works today, and once with the Passport Ready Check before Submit." },
+    { ch: 0, scene: "problem", target: "#t-stats",
+      title: "How big it is",
+      body: "One in four child applications comes back, and each return costs about six days. The 6 days and 38% come from the course brief; 26% is made up." },
 
-    { track: "today", label: "Today", title: "The parent submits",
-      text: "A parent renews their 8-year-old's passport online. The guidance covers every case on one long page, so they skim it and press Submit.",
-      screen: "phoneToday", note: "Parent's phone", clock: ["Day 0", "09:12"], focus: "T1",
-      bubble: { who: "parent", text: "I renewed my own passport online in ten minutes. Hers should be the same." },
-      facts: [["Applications a year, all ages", "520,000", "course"], ["Child share of applications", "25%", "made up"], ["Median time on the guidance page", "40 s", "made up"]],
-      log: [["Day 0 09:11", "Guidance page open for 40 seconds"], ["Day 0 09:12", "Parent submits a renewal for a child under 16"]] },
+    { ch: 1, scene: "today", who: "Today · Parent's phone", track: "today", clock: ["Day 0", "09:12"], target: "#t-guidance",
+      title: "One long page for everyone",
+      body: "The guidance covers every possible case. This parent skims it for 40 seconds (made up) and can't tell which parts apply to a child.",
+      quote: "I renewed my own passport online in ten minutes. Hers should be the same." },
+    { ch: 1, scene: "today", who: "Today · Parent's phone", track: "today", clock: ["Day 0", "09:12"], target: "#t-submit",
+      title: "The parent submits",
+      body: "Nothing on this screen says anything is missing.",
+      action: { act: "submit", hint: "Tap Submit", set: { submitted: true }, done: "Submitted. Now it waits in the queue." },
+      off: { guidance: "That's the long page. For this case, tap Submit, as the parent does." } },
+    { ch: 1, scene: "deskReturn", who: "Today · ICA officer's screen", track: "today", clock: ["Day 3", "10:05"], target: "#t-missing",
+      title: "Day 3: the officer finds the gap",
+      body: "An officer opens the case from the queue. The second parent's consent isn't there. This is the most common reason child applications come back (34%, made up).",
+      quote: "Half the child returns I process are the same three issues." },
+    { ch: 1, scene: "deskReturn", who: "Today · ICA officer's screen", track: "today", clock: ["Day 3", "10:05"], target: "#t-return",
+      title: "The officer sends it back",
+      body: "The officer can't approve it, so they write a return notice. That's about 12 minutes of officer time (made up).",
+      action: { act: "return", hint: "Tap Return", set: { returned: true }, done: "Return notice sent to the parent." },
+      off: { "approve-wrong": "An officer can't approve it with the consent missing. Tap Return to applicant." } },
+    { ch: 1, scene: "notice", who: "Today · Parent's phone", track: "today", clock: ["Day 6", "18:40"], late: true, target: "#t-clock",
+      title: "Day 6: about six days lost",
+      body: "The parent chases the other parent for consent and submits again. The case goes back into the queue, six days later, for one missing consent.",
+      quote: "Nobody told me her dad had to give consent online too.",
+      off: { "start-again": "That's where the parent starts over. Press Next to replay the same morning with the check." } },
 
-    { track: "today", label: "Today", title: "The officer finds what's missing",
-      text: "Three days later an ICA officer opens the case from the queue of child applications. The second parent's consent isn't there, so the officer writes a return notice.",
-      screen: "deskReturn", note: "ICA officer's screen", clock: ["Day 3", "10:17"], focus: "T2",
-      bubble: { who: "officer", text: "Half the child returns I process are the same three issues." },
-      facts: [["Child applications returned", "26%", "made up"], ["Child returns caused by missing consent", "34%", "made up"], ["Officer time per return notice", "12 min", "made up"]],
-      log: [["Day 3 10:05", "Officer opens case C-0417"], ["Day 3 10:05", "Second parent's consent not found"], ["Day 3 10:17", "Return notice written and sent"]] },
+    { ch: 2, scene: "q1", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:12"], target: "#t-chip",
+      title: "Same parent, same morning",
+      body: "This time a check opens by itself at the review step, because the application is for a child under 16. It's a guide, not a gate." },
+    { ch: 2, scene: "q1", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:12"], target: "#t-answers",
+      title: "Question 1",
+      body: "Each answer leads somewhere different. A renewal and a first passport need different documents.",
+      action: { act: "q1:renewal", hint: "Tap Renewal", set: { pick: "renewal" }, done: "Renewal. The check now knows which checklist applies." },
+      off: {
+        "q1:first": "A first passport has its own checklist. Tap Renewal to follow this case.",
+        "q1:lost": "A lost or damaged passport goes straight to an officer. Tap Renewal to follow this case.",
+        "q1:unsure": "Not sure goes to an officer, because the check won't guess. Tap Renewal to follow this case.",
+        "anyway": "Submit anyway is always there, because it's a guide, not a gate. For this case, tap Renewal."
+      } },
+    { ch: 2, scene: "questions", state: { q: 2 }, who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:13"], target: "#t-answers",
+      title: "Three more questions",
+      body: "Answer as this parent would. Any No or Not sure here would send them to an officer.",
+      seq: [{ q: 2, act: "q2:yes", hint: "Tap Yes" }, { q: 3, act: "q3:yes", hint: "Tap Yes" }, { q: 4, act: "q4:no", hint: "Tap No" }],
+      done: "That's all the check asks. No names, NRIC or passport numbers.",
+      off: {
+        "q2:no": "A child who isn't a Singapore citizen goes to an officer. Tap Yes to follow this case.",
+        "q2:unsure": "Not sure goes to an officer, because the check won't guess. Tap Yes to follow this case.",
+        "q3:no": "If a parent can't consent, for example after a death or a custody order, the case goes to an officer. Tap Yes to follow this case.",
+        "q3:unsure": "Not sure goes to an officer, because the check won't guess. Tap Yes to follow this case.",
+        "q4:yes": "A parent overseas goes to an officer. You'll see that in chapter 5. Tap No to follow this case.",
+        "q4:unsure": "Not sure goes to an officer, because the check won't guess. Tap No to follow this case."
+      } },
+    { ch: 2, scene: "fix", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:14"], target: "#t-fix",
+      title: "One thing to fix",
+      body: "The check shows only what this case needs. The missing consent appears now, before Submit, with exactly what to do." },
+    { ch: 2, scene: "fix", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:14"], target: "#t-trust",
+      title: "It never says approved",
+      body: "One line makes clear the officer still decides. The details sit one tap away under What we checked, so the screen stays simple.",
+      off: { anyway: "Submit anyway is always there, because it's a guide, not a gate. Press Next to continue the case." } },
+    { ch: 2, scene: "fix", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:14"], target: "#t-back",
+      title: "The parent fixes it now",
+      body: "Instead of submitting and waiting six days, the parent goes back and gets the consent sorted.",
+      quote: "So her dad gives consent online first. Got it.",
+      action: { act: "back", hint: "Tap Back to my application", set: { back: true }, done: "Twenty minutes later, consent is given (made up)." },
+      off: { anyway: "The parent could skip the check. For this case, tap Back to my application." } },
 
-    { track: "today", label: "Today", title: "Returned, and about six days lost",
-      text: "The parent gets the notice, chases the other parent for consent and submits again. By the time the case is back in the queue, about six days have gone.",
-      screen: "phoneNotice", note: "Parent's phone", clock: ["Day 6", "18:40"], late: true, stamp: true, focus: "T3",
-      bubble: { who: "parent", text: "Nobody told me her dad had to give consent online too." },
-      facts: [["Days added per return", "about 6", "course"], ["All applications returned", "17%", "course"], ["Counter capacity against online demand", "35%", "course"]],
-      log: [["Day 3 18:02", "Parent reads the return notice"], ["Day 6 18:40", "Consent given, application submitted again"], ["Day 6", "Back in the queue. About six days added"]] },
+    { ch: 3, scene: "complete", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:34"], target: "#t-consent",
+      title: "Complete, but consent still goes to an officer",
+      body: "The check can see that consent was given, not whether it's valid. So it never says \"you have everything\"; it hands that call to the officer." },
+    { ch: 3, scene: "complete", who: "With the check · Parent's phone", track: "check", clock: ["Day 0", "09:34"], target: "#t-submit2",
+      title: "Submit, complete",
+      body: "Same day, same morning. Nothing is missing this time.",
+      action: { act: "submit", hint: "Tap Submit", set: { submitted: true }, done: "Submitted complete." } },
+    { ch: 3, scene: "deskComplete", who: "With the check · ICA officer's screen", track: "check", clock: ["Day 3", "10:05"], target: "#t-flag",
+      title: "Day 3: the officer checks the consent",
+      body: "The case arrives complete. The check flagged consent for the officer, so that's the one thing to confirm." },
+    { ch: 3, scene: "deskComplete", who: "With the check · ICA officer's screen", track: "check", clock: ["Day 3", "10:08"], target: "#t-approve",
+      title: "The officer decides",
+      body: "The decision stays with the officer, as the brief requires. There's nothing to return.",
+      quote: "Complete when it arrived. I check the consent and decide.",
+      action: { act: "approve", hint: "Tap Approve", set: { approved: true }, done: "Decided. No return notice, no six-day loop." },
+      off: { "return-wrong": "Nothing is missing, so there's nothing to return. Tap Approve." } },
+    { ch: 3, scene: "compare", target: "#t-compare",
+      title: "Where the six days went",
+      body: "Today the parent learns about the missing consent on day 3 and resubmits on day 6. With the check they learn on day 0 and fix it before Submit." },
 
-    { track: "check", label: "With the check", title: "The check opens before Submit",
-      text: "Same parent, same application. At the review step the check opens by itself, because the application is for a child under 16. It is a guide, not a gate.",
-      screen: "phoneIntro", note: "Parent's phone", clock: ["Day 0", "09:12"], focus: "C1",
-      facts: [["What opens the check", "Child under 16", "design"], ["Documents the check opens", "None", "design"], ["Can the parent skip it", "Yes, always", "design"]],
-      log: [["Day 0 09:12", "Check opens at the review step"]] },
+    { ch: 4, scene: "edgeQ4", who: "Another parent's phone", track: "edge", clock: ["Day 0", "14:40"], target: "#t-answers",
+      title: "When the check shouldn't answer",
+      body: "A different made-up parent. Their child's other parent is working overseas.",
+      quote: "Her dad is working overseas until March.",
+      action: { act: "edge:yes", hint: "Tap Yes", done: "A parent is overseas. Watch what the check does." },
+      off: { "edge:no": "This parent is overseas. Tap Yes to see what happens.", "edge:unsure": "Not sure would also go to an officer. Tap Yes for this case." } },
+    { ch: 4, scene: "stop", who: "Another parent's phone", track: "edge", clock: ["Day 0", "14:40"], target: "#t-officer",
+      title: "It stops and hands over",
+      body: "Instead of guessing, the check sends the parent to an officer. A wrong answer here costs more than no answer. The same happens for a lost passport, a child who isn't a citizen, or a parent who can't consent.",
+      off: { officer: "In the real service this goes to an ICA officer. Press Next for what we're testing." } },
 
-    { track: "check", label: "With the check", title: "Up to four questions",
-      text: "The parent answers four questions about their situation. The check asks for no names, no NRIC and no passport numbers.",
-      screen: "phoneQuestions", note: "Parent's phone", clock: ["Day 0", "09:13"], focus: "C2",
-      facts: [["Questions asked", "up to 4", "design"], ["Personal details asked", "None", "design"], ["Unclear answer", "Goes to an officer", "design"]],
-      log: [["Day 0 09:12", "Renewal"], ["Day 0 09:13", "Child is a Singapore citizen"], ["Day 0 09:13", "Both parents can give consent"], ["Day 0 09:13", "Neither parent is overseas"]] },
-
-    { track: "check", label: "With the check", title: "One thing to fix",
-      text: "The check shows only what this case needs. One thing is missing, and it says exactly what to do. It doesn't approve anything.",
-      screen: "phoneFix", note: "Parent's phone", clock: ["Day 0", "09:14"], focus: "C3",
-      bubble: { who: "parent", text: "So her dad gives consent online first. Got it." },
-      facts: [["Child returns a checklist can catch", "56%", "made up"], ["Missing second-parent consent", "34%", "made up"], ["Wrong or missing document", "22%", "made up"]],
-      log: [["Day 0 09:14", "Result: one thing to fix, the second parent's consent"]] },
-
-    { track: "check", label: "With the check", title: "Complete before Submit",
-      text: "Twenty minutes later the other parent has given consent. Everything listed is there. Consent stays flagged for an officer, because only an officer can confirm it is valid.",
-      screen: "phoneComplete", note: "Parent's phone", clock: ["Day 0", "09:34"], focus: "C4",
-      facts: [["Who confirms consent is valid", "An officer", "design"], ["Words the check never uses", "Approved, ready", "design"]],
-      log: [["Day 0 09:31", "Other parent gives consent online"], ["Day 0 09:34", "Looks complete for the items listed"], ["Day 0 09:34", "Parent submits"]] },
-
-    { track: "check", label: "With the check", title: "The officer decides, nothing to return",
-      text: "The case reaches the officer complete. The officer confirms the consent and makes the decision. No return notice, and no six-day loop.",
-      screen: "deskComplete", note: "ICA officer's screen", clock: ["Day 3", "10:08"], focus: "C5",
-      bubble: { who: "officer", text: "Complete when it arrived. I check the consent and decide." },
-      facts: [["First-time acceptance today, child applications", "74%", "made up"], ["Pilot target, whole treatment group", "82% or more", "made up"]],
-      log: [["Day 3 10:05", "Officer opens case C-0417, nothing missing"], ["Day 3 10:08", "Officer confirms the consent and decides"]] },
-
-    { track: "edge", label: "When it shouldn't answer", title: "Needs a person",
-      text: "A different made-up parent says the other parent is overseas. The check doesn't guess. It stops and sends them to an officer, because a wrong answer here costs more than no answer.",
-      screen: "phoneStop", note: "Another parent's phone", clock: ["Day 0", "14:40"], focus: "E2",
-      bubble: { who: "parent", text: "Her dad is working overseas until March." },
-      facts: [["Also stops for", "Lost passport, not a citizen, consent not possible, something else", "design"], ["Rules out of date", "Check hides itself", "design"]],
-      log: [["Day 0 14:40", "Answer: a parent is overseas"], ["Day 0 14:40", "Check stops. No checklist shown"], ["Day 0 14:40", "Parent sent to an ICA officer"]] },
-
-    { track: "all", label: "The hypothesis", title: "What this prototype tests",
-      text: "The walkthrough shows the idea. These cheap tests decide whether it works, in this order.",
-      screen: "test", clock: null, focus: null,
-      facts: [["Continue if the catch rate is", "50% or more", "made up"], ["Stop if the catch rate is", "under 40%", "made up"], ["Out of reach: photo problems", "28%", "made up"]],
-      log: [] }
+    { ch: 5, scene: "tests", target: "#t-hyp",
+      title: "What we're testing",
+      body: "The walkthrough shows the idea. This is the bet: most child returns are things a short checklist can catch." },
+    { ch: 5, scene: "tests", target: "#t-tests",
+      title: "Cheapest test first",
+      body: "Each test can stop the idea before the next one costs more. The full clickable flow is only built if the first two pass." },
+    { ch: 5, scene: "tests", target: "#t-limit", last: true,
+      title: "The limit we accept",
+      body: "Our 200 cases are made up, so they only test our own guess. Real return data from ICA is the real test. That's the end of the walkthrough." }
   ];
 
-  /* ---------- Service map ---------- */
-  var NS = "http://www.w3.org/2000/svg";
-  var LANES = { parent: 40, check: 84, officer: 128 };
-  var X0 = 160, DAY = 128;
-  function dayX(d) { return X0 + d * DAY; }
-  var NODES = [
-    { id: "T1", track: "today", lane: "parent", x: dayX(0), label: "Submits" },
-    { id: "T2", track: "today", lane: "officer", x: dayX(3) - 14, label: "Officer returns it, day 3" },
-    { id: "T3", track: "today", lane: "parent", x: dayX(6), label: "Submits again, day 6" },
-    { id: "C1", track: "check", lane: "check", x: dayX(0) + 24, label: "Check opens" },
-    { id: "C2", track: "check", lane: "check", x: dayX(0) + 48, label: "Four questions" },
-    { id: "C3", track: "check", lane: "parent", x: dayX(0) + 72, label: "Fixes before Submit" },
-    { id: "C4", track: "check", lane: "parent", x: dayX(0) + 96, label: "Submits complete" },
-    { id: "C5", track: "check", lane: "officer", x: dayX(3) + 14, label: "Officer decides, day 3" },
-    { id: "E1", track: "edge", lane: "check", x: dayX(1) + 10, label: "Check stops" },
-    { id: "E2", track: "edge", lane: "officer", x: dayX(1) + 10, label: "Officer takes the case" }
-  ];
-  var ORDER = { today: ["T1", "T2", "T3"], check: ["C1", "C2", "C3", "C4", "C5"], edge: ["E1", "E2"] };
-  var bp = document.getElementById("bp");
-  var nodeEls = {}, segEls = [];
-
-  function el(name, attrs, text) {
-    var e = document.createElementNS(NS, name);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
-    if (text) e.textContent = text;
-    bp.appendChild(e);
-    return e;
-  }
-  function node(id) { return NODES.filter(function (n) { return n.id === id; })[0]; }
-
-  function buildMap() {
-    var names = { parent: "Parent", check: "The check", officer: "ICA officer" };
-    Object.keys(LANES).forEach(function (k) {
-      el("line", { "class": "lane", x1: 110, x2: 990, y1: LANES[k], y2: LANES[k] });
-      el("text", { "class": "lane-label", x: 8, y: LANES[k] + 4 }, names[k]);
-    });
-    for (var d = 0; d <= 6; d++) {
-      el("line", { "class": "tickline", x1: dayX(d), x2: dayX(d), y1: 20, y2: 142 });
-      el("text", { "class": "tick", x: dayX(d), y: 160, "text-anchor": "middle" }, "Day " + d);
-    }
-    Object.keys(ORDER).forEach(function (track) {
-      var ids = ORDER[track];
-      for (var i = 1; i < ids.length; i++) {
-        var a = node(ids[i - 1]), b = node(ids[i]);
-        var cls = track;
-        if (ids[i] === "T3") cls = "return";
-        var mx = (a.x + b.x) / 2;
-        var d = "M" + a.x + " " + LANES[a.lane] + " C " + mx + " " + LANES[a.lane] + ", " + mx + " " + LANES[b.lane] + ", " + b.x + " " + LANES[b.lane];
-        var s = el("path", { "class": "seg " + cls, d: d });
-        segEls.push({ el: s, track: track, to: ids[i] });
-      }
-    });
-    NODES.forEach(function (n) {
-      nodeEls[n.id] = el("circle", { "class": "node " + n.track + " " + n.id, cx: n.x, cy: LANES[n.lane], r: 7 });
-      var t = document.createElementNS(NS, "title");
-      t.textContent = n.label;
-      nodeEls[n.id].appendChild(t);
-    });
-    bp.ring = el("circle", { "class": "focus-ring", r: 12, cx: -50, cy: -50 });
-    bp.label = el("text", { "class": "focus-label", x: -50, y: -50 });
-  }
-
-  function updateMap(step) {
-    var focus = step.focus ? node(step.focus) : null;
-    var track = focus ? focus.track : null;
-    var reached = {};
-    if (focus) {
-      var ids = ORDER[track];
-      for (var i = 0; i <= ids.indexOf(focus.id); i++) reached[ids[i]] = true;
-    }
-    NODES.forEach(function (n) {
-      var e = nodeEls[n.id];
-      e.classList.remove("dim", "ghost");
-      if (!focus) return;
-      if (n.track !== track) e.classList.add("dim");
-      else if (!reached[n.id]) e.classList.add("ghost");
-    });
-    segEls.forEach(function (s) {
-      s.el.classList.remove("dim", "ghost");
-      if (!focus) return;
-      if (s.track !== track) s.el.classList.add("dim");
-      else if (!reached[s.to]) s.el.classList.add("ghost");
-    });
-    if (focus) {
-      var y = LANES[focus.lane];
-      bp.ring.setAttribute("cx", focus.x); bp.ring.setAttribute("cy", y);
-      var anchor = focus.x > 820 ? "end" : "start";
-      bp.label.setAttribute("text-anchor", anchor);
-      bp.label.setAttribute("x", focus.x + (anchor === "end" ? -16 : 16));
-      bp.label.setAttribute("y", y - 10);
-      bp.label.textContent = focus.label;
-    } else {
-      bp.ring.setAttribute("cx", -50); bp.ring.setAttribute("cy", -50);
-      bp.label.textContent = "";
-    }
-  }
-
-  /* ---------- Player ---------- */
+  /* ---------------- Engine ---------------- */
   var $ = function (id) { return document.getElementById(id); };
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var current = 0, playing = false, startedAt = 0, raf = 0, rollTimer = 0;
-  var STEP_MS = 7500;
+  var narrow = function () { return window.innerWidth < 900; };
+  var cur = 0, state = {}, seqIdx = 0, pending = false, busy = false, rollTimer = 0;
+
+  function clone(o) { var r = {}; for (var k in o) r[k] = o[k]; return r; }
 
   function buildChapters() {
     var ol = $("chapters");
-    CHAPTERS.forEach(function (c, i) {
+    CHAPTERS.forEach(function (name, i) {
       var li = document.createElement("li");
       var b = document.createElement("button");
       b.type = "button";
-      b.innerHTML = "<span>" + (i + 1) + "</span>" + c.name;
-      b.addEventListener("click", function () { go(c.at); });
+      b.textContent = name;
+      b.addEventListener("click", function () {
+        for (var k = 0; k < STEPS.length; k++) if (STEPS[k].ch === i) { go(k); return; }
+      });
       li.appendChild(b);
       ol.appendChild(li);
     });
-    var bar = $("bar");
-    CHAPTERS.forEach(function (c) {
-      if (c.at === 0) return;
-      var m = document.createElement("span");
-      m.className = "mark";
-      m.style.left = (c.at / (STEPS.length - 1) * 100) + "%";
-      bar.appendChild(m);
-    });
   }
 
-  function chapterOf(i) {
-    var idx = 0;
-    CHAPTERS.forEach(function (c, k) { if (i >= c.at) idx = k; });
-    return idx;
+  function currentAction() {
+    var s = STEPS[cur];
+    if (s.seq) return seqIdx < s.seq.length ? s.seq[seqIdx] : null;
+    return s.action || null;
   }
 
-  function trackLabelFor(track) {
-    return { today: "Case log, today", check: "Case log, with the check", edge: "Case log, another parent" }[track] || "Case log";
+  function renderScene() {
+    var s = STEPS[cur];
+    $("scene").innerHTML = SCENES[s.scene](state);
   }
 
-  function rollDays(from, to, time) {
+  function setClock(s, roll) {
+    var ctx = $("context");
+    if (!s.clock) { ctx.hidden = true; return; }
+    ctx.hidden = false;
+    var who = $("who");
+    who.textContent = s.who || "";
+    who.setAttribute("data-track", s.track || "");
+    var c = $("t-clock");
+    c.classList.toggle("late", !!s.late);
     clearInterval(rollTimer);
-    var d = from;
-    $("clockDay").textContent = "Day " + d;
-    $("clockTime").textContent = "";
-    rollTimer = setInterval(function () {
-      d += 1;
+    if (roll && !reduced) {
+      var d = 3;
       $("clockDay").textContent = "Day " + d;
-      if (d >= to) { clearInterval(rollTimer); $("clockTime").textContent = time; }
-    }, 260);
+      $("clockTime").textContent = "";
+      rollTimer = setInterval(function () {
+        d += 1;
+        $("clockDay").textContent = "Day " + d;
+        if (d >= 6) { clearInterval(rollTimer); $("clockTime").textContent = s.clock[1]; }
+      }, 260);
+    } else {
+      $("clockDay").textContent = s.clock[0];
+      $("clockTime").textContent = s.clock[1];
+    }
   }
 
-  function render() {
-    var s = STEPS[current];
-    var ch = chapterOf(current);
+  function renderGuide() {
+    var s = STEPS[cur];
+    $("gChapter").textContent = CHAPTERS[s.ch];
+    $("gCount").textContent = (cur + 1) + " of " + STEPS.length;
+    $("gTitle").textContent = s.title;
+    $("gBody").textContent = s.body;
+    var q = $("gQuote");
+    if (s.quote) { q.hidden = false; q.textContent = (s.scene.indexOf("desk") === 0 ? "Officer (made up): " : "Parent (made up): ") + "“" + s.quote + "”"; }
+    else q.hidden = true;
+    $("gFeedback").hidden = true;
+    var a = currentAction();
+    pending = !!a;
+    $("gHint").textContent = a ? a.hint : "";
+    $("gSkip").hidden = !a;
+    $("gNext").hidden = !!a;
+    $("gNext").textContent = s.last ? "Start again" : "Next";
+    $("gBack").disabled = cur === 0;
+    $("spot").classList.toggle("act", !!a);
+  }
 
+  function feedback(msg) {
+    var f = $("gFeedback");
+    f.textContent = msg;
+    f.hidden = false;
+    place();
+  }
+
+  function renderNav() {
+    var s = STEPS[cur];
     Array.prototype.forEach.call($("chapters").querySelectorAll("button"), function (b, k) {
-      if (k === ch) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
-      b.classList.toggle("done", k < ch);
+      if (k === s.ch) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", k < s.ch);
     });
-
-    var tr = $("track");
-    tr.textContent = s.label;
-    tr.setAttribute("data-track", s.track);
-    $("title").textContent = s.title;
-    $("narration").textContent = s.text;
-    $("setNote").textContent = s.note || "";
-
-    $("device").innerHTML = S[s.screen]();
-
-    var clock = $("clock");
-    clearInterval(rollTimer);
-    if (s.clock) {
-      clock.hidden = false;
-      clock.classList.toggle("late", !!s.late);
-      if (s.stamp && !reduced) rollDays(3, 6, s.clock[1]);
-      else { $("clockDay").textContent = s.clock[0]; $("clockTime").textContent = s.clock[1]; }
-    } else {
-      clock.hidden = true;
-    }
-
-    var stamp = $("stamp");
-    stamp.classList.remove("on");
-    if (s.stamp) { void stamp.offsetWidth; stamp.classList.add("on"); }
-
-    var bub = $("bubble");
-    if (s.bubble) {
-      bub.hidden = false;
-      bub.setAttribute("data-who", s.bubble.who);
-      bub.className = "bubble " + (s.bubble.who === "officer" ? "right" : "left");
-      $("bubbleWho").textContent = s.bubble.who === "officer" ? "ICA officer (made-up persona)" : "Parent (made-up persona)";
-      $("bubbleText").textContent = s.bubble.text;
-    } else {
-      bub.hidden = true;
-    }
-
-    var log = $("log");
-    log.innerHTML = "";
-    $("logTitle").textContent = trackLabelFor(s.track);
-    $("logHint").textContent = s.track === "all" ? "Each part of the story has its own made-up case log." : "All times and case numbers are made up.";
-    var entries = [];
-    for (var i = 0; i <= current; i++) {
-      if (STEPS[i].track !== s.track || s.track === "all") continue;
-      STEPS[i].log.forEach(function (e) { entries.push({ t: e[0], x: e[1], fresh: i === current }); });
-    }
-    if (!entries.length) {
-      var li0 = document.createElement("li");
-      li0.className = "empty";
-      li0.textContent = s.track === "all" ? "Press Next to start the made-up case." : "";
-      log.appendChild(li0);
-    }
-    entries.forEach(function (e) {
-      var li = document.createElement("li");
-      if (e.fresh) li.className = "new";
-      var t = document.createElement("time"); t.textContent = e.t;
-      var sp = document.createElement("span"); sp.textContent = e.x;
-      li.appendChild(t); li.appendChild(sp);
-      log.appendChild(li);
-    });
-    log.scrollTop = log.scrollHeight;
-
-    var facts = $("facts");
-    facts.innerHTML = "";
-    s.facts.forEach(function (f) {
-      var div = document.createElement("div");
-      var dt = document.createElement("dt"); dt.textContent = f[0];
-      var dd = document.createElement("dd"); dd.textContent = f[1];
-      var tag = document.createElement("span"); tag.className = "tag"; tag.setAttribute("data-src", f[2]); tag.textContent = f[2];
-      div.appendChild(dt); div.appendChild(dd); div.appendChild(tag);
-      facts.appendChild(div);
-    });
-
-    updateMap(s);
-
-    $("prev").disabled = current === 0;
-    $("next").textContent = current === STEPS.length - 1 ? "Start again" : "Next";
-    $("count").textContent = "Step " + (current + 1) + " of " + STEPS.length;
-    $("bar").setAttribute("aria-valuenow", current + 1);
-    setFill(0);
-  }
-
-  function setFill(frac) {
-    var pct = Math.min(1, (current + frac) / (STEPS.length - 1)) * 100;
-    $("barFill").style.width = pct + "%";
+    $("prog").style.width = (cur / (STEPS.length - 1) * 100) + "%";
   }
 
   function go(i) {
-    current = Math.max(0, Math.min(STEPS.length - 1, i));
-    startedAt = performance.now();
-    render();
+    clearInterval(rollTimer);
+    busy = false;
+    cur = Math.max(0, Math.min(STEPS.length - 1, i));
+    var s = STEPS[cur];
+    state = clone(s.state || {});
+    seqIdx = 0;
+    if (s.seq) state.q = s.seq[0].q;
+    var prev = STEPS[cur - 1];
+    var roll = s.late && !(prev && prev.late);
+    renderScene();
+    setClock(s, roll);
+    renderGuide();
+    renderNav();
+    try { history.replaceState(null, "", "#step=" + (cur + 1)); } catch (err) { /* some browsers block this for local files */ }
+    focusTarget(true);
   }
 
   function next() {
-    if (current === STEPS.length - 1) { go(0); return; }
-    go(current + 1);
+    if (STEPS[cur].last) { go(0); return; }
+    go(cur + 1);
   }
 
-  function tick(now) {
-    if (!playing) return;
-    var frac = (now - startedAt) / STEP_MS;
-    if (frac >= 1) {
-      if (current === STEPS.length - 1) { setPlaying(false); setFill(0); return; }
-      go(current + 1);
+  /* Spotlight and guide placement */
+  function target() { var s = STEPS[cur]; return s.target ? document.querySelector(s.target) : null; }
+
+  function focusTarget(scroll) {
+    requestAnimationFrame(function () {
+      var t = target();
+      if (t && scroll) {
+        var r = t.getBoundingClientRect();
+        var topBar = document.querySelector(".top").getBoundingClientRect().bottom;
+        var guideH = narrow() ? $("guide").offsetHeight + 32 : 0;
+        var avail = window.innerHeight - topBar - guideH;
+        // Narrow: keep the target high so the guide fits underneath it. Wide: centre it.
+        var wantTop = topBar + (narrow() ? 16 : Math.max(16, (avail - r.height) * 0.42));
+        var dy = r.top - wantTop;
+        if (Math.abs(dy) > 24 && (r.top < topBar + 12 || r.bottom > window.innerHeight - guideH - 12 || narrow())) {
+          window.scrollTo({ top: window.scrollY + dy, behavior: reduced ? "auto" : "smooth" });
+        }
+      }
+      place();
+    });
+  }
+
+  function place() {
+    var spot = $("spot"), g = $("guide"), arrow = $("gArrow");
+    var t = target();
+    document.body.style.paddingBottom = narrow() ? (g.offsetHeight + 40) + "px" : "";
+    if (!t) { spot.hidden = true; arrow.hidden = true; $("conn").hidden = true; return; }
+    if (narrow()) $("conn").hidden = true;
+    var r = t.getBoundingClientRect();
+    var pad = 8;
+    spot.hidden = false;
+    spot.style.top = (r.top - pad) + "px";
+    spot.style.left = (r.left - pad) + "px";
+    spot.style.width = (r.width + pad * 2) + "px";
+    spot.style.height = (r.height + pad * 2) + "px";
+
+    var gw = g.offsetWidth, gh = g.offsetHeight;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    arrow.hidden = false;
+    arrow.style.left = arrow.style.top = arrow.style.right = arrow.style.bottom = "";
+
+    if (narrow()) {
+      // Sit just below the target if it fits, otherwise just above it, otherwise dock at the bottom.
+      var nx = Math.round((vw - gw) / 2), ny, cx = r.left + r.width / 2;
+      var below = r.bottom + pad + 16, above = r.top - pad - 16 - gh;
+      if (below + gh <= vh - 8) { ny = below; arrow.style.top = "-8px"; }
+      else if (above >= 70) { ny = above; arrow.style.bottom = "-8px"; }
+      else { ny = vh - gh - 12; arrow.hidden = true; }
+      arrow.style.left = Math.max(18, Math.min(gw - 34, cx - nx - 8)) + "px";
+      g.style.left = nx + "px";
+      g.style.top = ny + "px";
+      return;
+    }
+
+    var gap = 20, x, y, side;
+    var cy = r.top + r.height / 2, cxx = r.left + r.width / 2;
+    // Prefer the guide lane to the right of the whole scene, so the guide never covers the device.
+    var dev = document.querySelector("#scene > *");
+    var dr = dev ? dev.getBoundingClientRect() : r;
+    var laneX = Math.max(r.right, dr.right) + pad + gap;
+    if (laneX + gw <= vw - 12) {
+      x = laneX;
+      y = Math.max(70, Math.min(vh - gh - 12, cy - gh / 2));
+      arrow.style.top = Math.max(16, Math.min(gh - 32, cy - y - 8)) + "px";
+      arrow.style.left = "-8px";
+      // A connector from the spotlight edge to the guide when they're apart.
+      var conn = $("conn");
+      var from = r.right + pad, to = x;
+      if (to - from > 14) {
+        conn.hidden = false;
+        conn.style.left = from + "px";
+        conn.style.top = cy + "px";
+        conn.style.width = (to - from) + "px";
+      } else conn.hidden = true;
+      g.style.left = x + "px";
+      g.style.top = y + "px";
+      return;
+    }
+    $("conn").hidden = true;
+    if (r.right + pad + gap + gw <= vw - 12) side = "right";
+    else if (r.left - pad - gap - gw >= 12) side = "left";
+    else if (r.bottom + pad + gap + gh <= vh - 12) side = "bottom";
+    else side = "top";
+
+    if (side === "right" || side === "left") {
+      x = side === "right" ? r.right + pad + gap : r.left - pad - gap - gw;
+      y = Math.max(70, Math.min(vh - gh - 12, cy - gh / 2));
+      arrow.style.top = Math.max(16, Math.min(gh - 32, cy - y - 8)) + "px";
+      arrow.style[side === "right" ? "left" : "right"] = "-8px";
     } else {
-      setFill(frac);
+      x = Math.max(12, Math.min(vw - gw - 12, cxx - gw / 2));
+      y = side === "bottom" ? r.bottom + pad + gap : Math.max(12, r.top - pad - gap - gh);
+      arrow.style.left = Math.max(16, Math.min(gw - 32, cxx - x - 8)) + "px";
+      arrow.style[side === "bottom" ? "top" : "bottom"] = "-8px";
     }
-    raf = requestAnimationFrame(tick);
+    g.style.left = x + "px";
+    g.style.top = y + "px";
   }
 
-  function setPlaying(on) {
-    playing = on;
-    $("play").textContent = on ? "Pause" : "Play";
-    $("play").setAttribute("aria-pressed", on ? "true" : "false");
-    cancelAnimationFrame(raf);
-    if (on) {
-      if (current === STEPS.length - 1) go(0);
-      startedAt = performance.now();
-      raf = requestAnimationFrame(tick);
-    }
-  }
+  /* Clicks inside the scene */
+  $("scene").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b || b.disabled || busy) return;
+    var act = b.getAttribute("data-act");
+    var s = STEPS[cur];
+    var a = currentAction();
 
-  $("prev").addEventListener("click", function () { go(current - 1); });
-  $("next").addEventListener("click", next);
-  $("play").addEventListener("click", function () { setPlaying(!playing); });
-  $("bar").addEventListener("click", function (e) {
-    var r = this.getBoundingClientRect();
-    go(Math.round((e.clientX - r.left) / r.width * (STEPS.length - 1)));
+    // "What we checked" opens on any screen that has it.
+    var toggled = false;
+    if (act === "more") {
+      state.more = !state.more;
+      renderScene();
+      focusTarget(false);
+      toggled = true;
+    }
+
+    if (a && act === a.act) {
+      if (s.seq) {
+        seqIdx += 1;
+        if (seqIdx < s.seq.length) {
+          state.q = s.seq[seqIdx].q;
+          renderScene();
+          $("gHint").textContent = s.seq[seqIdx].hint;
+          $("gFeedback").hidden = true;
+          focusTarget(false);
+          return;
+        }
+        succeed(s.done);
+        return;
+      }
+      if (a.set) for (var k in a.set) state[k] = a.set[k];
+      renderScene();
+      succeed(a.done);
+      return;
+    }
+
+    if (s.off && s.off[act]) { feedback(s.off[act]); return; }
+    if (GENERIC[act]) { feedback(GENERIC[act] + (a ? " " + a.hint + " to continue." : " Press Next to continue.")); return; }
+    if (a) { feedback("Not this one. " + a.hint + " to continue."); return; }
+    if (!toggled) feedback("This screen is for looking. Press Next to continue.");
   });
+
+  var GENERIC = {
+    more: "That shows what the check looked at, one tap away so the screen stays simple.",
+    anyway: "Submit anyway is always there, because the check is a guide, not a gate.",
+    guidance: "That's the one long page for every case."
+  };
+
+  function succeed(msg) {
+    busy = true;
+    pending = false;
+    $("spot").classList.remove("act");
+    $("gHint").textContent = "";
+    $("gSkip").hidden = true;
+    feedback(msg);
+    focusTarget(false);
+    setTimeout(function () { if (busy) next(); }, reduced ? 900 : 1500);
+  }
+
+  $("gNext").addEventListener("click", next);
+  $("gBack").addEventListener("click", function () { go(cur - 1); });
+  $("gSkip").addEventListener("click", next);
   document.addEventListener("keydown", function (e) {
-    if (e.target && e.target.tagName === "A") return;
-    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); go(current - 1); }
-    else if (e.key === " " && e.target === document.body) { e.preventDefault(); setPlaying(!playing); }
-    else if (e.key === "Home") { e.preventDefault(); go(0); }
+    if (e.target && /^(A|INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (pending) feedback(currentAction().hint + " to continue, or press Skip.");
+      else if (!busy) next();
+    } else if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); }
   });
+
+  var raf = 0;
+  function onMove() { cancelAnimationFrame(raf); raf = requestAnimationFrame(place); }
+  window.addEventListener("scroll", onMove, { passive: true });
+  window.addEventListener("resize", function () { focusTarget(true); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { place(); });
 
   buildChapters();
-  buildMap();
   var start = parseInt((location.hash.match(/step=(\d+)/) || [])[1], 10);
   go(isNaN(start) ? 0 : start - 1);
 })();
