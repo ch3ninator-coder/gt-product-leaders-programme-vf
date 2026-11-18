@@ -175,6 +175,19 @@ It is hard-coded to one made-up case, check 2 in section 12: a renewal where the
 
 The READY CHECK text format in section 7 stays as the agent's output contract (`skill-file.md`). The screen is free to present it with progressive disclosure.
 
+### Walkthrough for presenting
+
+`demo.html` is a guided walkthrough for showing the idea to an instructor or stakeholders. It is not the test. It follows one made-up child renewal twice:
+
+1. **The problem.** The problem statement, with each number tagged "course" or "made up".
+2. **Today.** The parent submits, the officer finds missing consent on day 3 and writes a return notice, and the case is back in the queue on day 6.
+3. **With the check.** The check opens before Submit, asks up to four questions and shows one thing to fix.
+4. **Fixed first time.** The parent fixes it the same morning, and the officer confirms the consent and decides with nothing to return.
+5. **Needs a person.** A parent is overseas, so the check stops and hands over to an officer.
+6. **What we test.** The hypothesis and the three tests from section 1, in order.
+
+A service map (parent, the check, ICA officer, day 0 to day 6) shows where the time goes. The side panels show a made-up case log and the numbers behind each step, each tagged by source. It works offline, and the arrow keys step through it.
+
 ## 12. Done when
 
 Each check has an expected output. `scenarios.md` repeats them as test scripts.
