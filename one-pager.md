@@ -23,7 +23,7 @@ Use case: **Scenario B · ICA passport applications and renewals** (synthetic da
 
 ## Experience and trust
 
-The flow and its trust design are in `day1-discover-define/ai-ux-flow.md`. In short: the check opens by itself for child-under-16 applications, echoes the parent's answers back so a wrong turn is visible, dates every rule, and reads no documents. The parent ticks what they have and can always submit without the check — it is a guide, not a gate. The rule for when a human steps in: the check escalates to an officer whenever being wrong costs more than staying silent (edge cases, stale rules, and any "all clear" on consent it cannot confirm).
+The flow and its trust design are in `day1-discover-define/ai-ux-flow.md`. In short: the check opens by itself for child-under-16 applications, shows one line summarising the parent's answers so a wrong turn is visible, keeps a dated rule behind every item (one tap away, not on screen), and reads no documents. On screen, the result carries only what is load-bearing: the thing to fix, what to do, and one line saying an officer decides. The parent ticks what they have and can always submit without the check — it is a guide, not a gate. The rule for when a human steps in: the check escalates to an officer whenever being wrong costs more than staying silent (edge cases, stale rules, and any "all clear" on consent it cannot confirm).
 
 ## Risks (market, technical, team)
 

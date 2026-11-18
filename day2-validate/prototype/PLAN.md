@@ -56,7 +56,7 @@ There are up to four questions, one per screen. The progress marker reads "Quest
 
 ## 5. The checklist (made up)
 
-The checklist screen is titled for the exact case, for example "What you need for: child renewal, Singapore citizen, both parents consenting". The parent's answers are echoed at the top, each with a **Change** link that re-runs the flow from that question. Every item shows its own "Rules as of [date] (made up)".
+The checklist screen is titled for the exact case, for example "What you need for: child renewal, Singapore citizen, both parents consenting". The parent's answers are echoed at the top, each with a **Change** link that re-runs the flow from that question. Every item has its own "Rules as of [date] (made up)" in the rules data, shown under "What we checked" rather than on each line.
 
 | Group | Child renewal | Child first-time |
 |---|---|---|
@@ -163,6 +163,17 @@ It is hard-coded to one made-up case, check 2 in section 12: a renewal where the
 - The standard banner and footer.
 
 **In a real application,** question 1 would already be answered by the form ("Renewal, from your application. Change"), so the real flow would start at question 2. The prototype will still ask it later, because it has no real form behind it.
+
+### Two versions for the five-person test
+
+- **`index.html` (full):** everything in the READY CHECK format on screen.
+- **`index-lean.html` (lean):** only what is load-bearing on screen: the one thing to fix, the action, the main button, one line saying an officer decides, and Submit anyway. Everything else (what is already present, the answers, the photo reminder, the rule date, "reads no documents") sits one tap away under "What we checked".
+
+**Load-bearing test:** an element stays on screen only if removing it would stop the parent knowing what to do next, or let them misread the result in a way that hurts them.
+
+**How to use them in the test:** show the full version to some people and the lean version to the others. Time how long each takes to name the next action, and record whether anyone reads either one as approval. If the lean version is as clear or clearer, the lean version becomes the design.
+
+The READY CHECK text format in section 7 stays as the agent's output contract (`skill-file.md`). The screen is free to present it with progressive disclosure.
 
 ## 12. Done when
 
