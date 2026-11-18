@@ -177,16 +177,18 @@ The READY CHECK text format in section 7 stays as the agent's output contract (`
 
 ### Walkthrough for presenting
 
-`demo.html` is a guided walkthrough for showing the idea to an instructor or stakeholders. It is not the test. It follows one made-up child renewal twice:
+`demo.html` is a guided walkthrough for showing the idea to an instructor or stakeholders. It is not the test. On each step, a spotlight dims everything except the one thing to look at, and a guide card points at it and explains it in a sentence or two. At key moments the viewer taps the button themselves (Submit, Return, the answers, Back, Approve). Tapping a different answer explains where that answer would lead.
 
-1. **The problem.** The problem statement, with each number tagged "course" or "made up".
-2. **Today.** The parent submits, the officer finds missing consent on day 3 and writes a return notice, and the case is back in the queue on day 6.
-3. **With the check.** The check opens before Submit, asks up to four questions and shows one thing to fix.
-4. **Fixed first time.** The parent fixes it the same morning, and the officer confirms the consent and decides with nothing to return.
+It follows one made-up child renewal twice, in 23 steps across six chapters:
+
+1. **The problem.** The problem statement and three numbers, each tagged "course brief" or "made up".
+2. **Today.** The parent submits, the officer finds missing consent on day 3 and returns it, and the parent resubmits on day 6.
+3. **With the check.** The check opens before Submit, the viewer answers the questions, and the result shows one thing to fix.
+4. **Fixed first time.** The parent submits complete, the officer confirms the consent and decides, and a timeline compares the two journeys.
 5. **Needs a person.** A parent is overseas, so the check stops and hands over to an officer.
-6. **What we test.** The hypothesis and the three tests from section 1, in order.
+6. **What we test.** The hypothesis, the three tests in order, and the limit we accept.
 
-A service map (parent, the check, ICA officer, day 0 to day 6) shows where the time goes. The side panels show a made-up case log and the numbers behind each step, each tagged by source. It works offline, and the arrow keys step through it.
+It works offline. The arrow keys step through it, and the chapter buttons jump.
 
 ## 12. Done when
 
