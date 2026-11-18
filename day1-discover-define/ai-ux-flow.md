@@ -12,14 +12,14 @@ A parent has filled in the online renewal for their 8-year-old and uploaded what
 
 ### Above the line: what the user sees
 
-Four short questions, one at a time: renewal or first passport, child a citizen or not, both parents able to consent, anyone overseas. Then one screen titled for their exact case — "What you need for: child renewal, citizen, both parents consenting" — grouped into identity documents, supporting documents, fees and what to expect. Each line is plain language with a tick box. A footer reads "This is a guide only. ICA officers make all final decisions. Rules as of 17 Nov 2026."
+Up to four short questions, one at a time: renewal or first passport, child a citizen or not, both parents able to consent, either parent overseas. Then one screen titled for their exact case — "What you need for: child renewal, citizen, both parents consenting" — grouped into identity documents, supporting documents, fees and what to expect. Each line is plain language with a tick box. A footer reads "This is a guide only. ICA officers make all final decisions. Rules as of [date] (made up)."
 
 ### Below the line
 
 - Data: the parent's four answers for this session only; the published ICA requirements checklist per situation; document *types* the parent ticks. No identity document contents, no names, no NRIC, no passport numbers.
-- Model: maps the four answers to the one situation out of six, then selects the matching checklist. Light classification, not generation of rules.
+- Model: maps the answers to one known situation (child renewal or child first-time) or to "needs an officer", then selects the matching checklist. Light classification, not generation of rules.
 - Rules: every checklist item is traced to a current published ICA rule and carries a date stamp; a named owner re-dates on every rule change; the model never invents a requirement.
-- Handoffs: any edge case (parent overseas, deceased parent, custody order, situation not in the six) stops the flow and routes the parent to an officer instead of guessing.
+- Handoffs: any edge case (parent overseas, deceased parent, custody order, any situation that is not a known one) stops the flow and routes the parent to an officer instead of guessing.
 
 ## The flow
 
@@ -29,7 +29,7 @@ Four short questions, one at a time: renewal or first passport, child a citizen 
    - Trust gap: **yes** — if it shows the wrong situation's list, the parent is misled. Each answer is echoed back at the top of the list so a wrong turn is obvious and editable.
 3. **Human check:** the parent ticks what they have. The parent — not the AI — decides whether each item is truly met; the AI only lists what is required.
    - Trust gap: **yes** — a parent could read "all ticked" as "approved". Every screen repeats that officers decide and that the check never reads the documents.
-4. **Outcome:** a one-screen summary of what is still missing, with the exact next action ("upload the second parent's consent"), or a clear "you appear to have everything listed — an officer still makes the final decision."
+4. **Outcome:** a one-screen summary of what is still missing, with the exact next action ("upload the second parent's consent"), or "Looks complete: Yes, for the items below", with second-parent consent still listed for an officer to confirm. It never says "you have everything".
    - Trust gap: **yes** — a false "all clear" would be worse than no check. The outcome states its own limits: it checks document *types*, not photo quality or officer judgment.
 
 ## Handoff triggers: when a human must step in
@@ -48,7 +48,7 @@ The rule underneath all of it: **the check escalates whenever being wrong is mor
 | Child's citizenship not straightforward (dual nationality, recent renunciation, in question) | Edge case | Hard stop; route to officer |
 | Name differs across documents (name change, adoption, correction) | Edge case | Hard stop; route to officer |
 | Lost, stolen or damaged passport | Edge case | Hard stop; route to officer (police report route) |
-| Four answers do not map cleanly to one of the six situations | Threshold (classification) | Do not pick the nearest; stop and route |
+| Answers do not map cleanly to a known situation | Threshold (classification) | Do not pick the nearest; stop and route |
 | Answers are internally inconsistent around consent | Risk-based | Do not say "all clear"; escalate the consent question |
 | Checklist "rules as of" date is older than the set window, or rules service unreachable | Threshold (freshness) | Hide the check; send parent to standard guidance |
 | High-consequence item (e.g. second-parent consent) that the check cannot positively confirm | Risk-based | Show the requirement; withhold any "you have everything" |
@@ -63,7 +63,7 @@ Notes on each type:
 
 ## Fallback when the AI is unsure (Advanced)
 
-If the four answers do not map cleanly to one of the six situations, or the parent flags an edge case, the check does not guess. It says plainly: "Your situation needs a person. Here is how to reach an ICA officer," and shows the contact route. It also degrades safely: if the rules service is unreachable or a checklist's date stamp is stale beyond a set window, the check hides itself rather than show possibly-wrong requirements, and tells the parent to use the standard guidance. Silence is safer than a confident wrong answer.
+If the answers do not map cleanly to a known situation, or the parent flags an edge case, the check does not guess. It says plainly: "Your situation needs a person. Here is how to reach an ICA officer," and shows the contact route. It also degrades safely: if the rules service is unreachable or a checklist's date stamp is stale beyond a set window, the check hides itself rather than show possibly-wrong requirements, and tells the parent to use the standard guidance. Silence is safer than a confident wrong answer.
 
 ## How we measure trust (Expert)
 

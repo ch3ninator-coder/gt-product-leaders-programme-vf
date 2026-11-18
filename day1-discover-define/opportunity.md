@@ -33,8 +33,8 @@ Parents only discover their application is incomplete after an officer reviews i
 
 ### 5. Success
 
-- **Pass:** In a 2-week 50/50 pilot on child applications, the treatment arm (check shown) beats the control arm (no check) on first-submission acceptance by at least 5 points, intent-to-treat — everyone assigned to treatment, not only those who used it. Among parents who actually used the check, the per-user rise is from ~74% to at least 85%. (74% is made up.)
-- **Fail:** Intent-to-treat gain over control is under 5 points, or more than 15% of parents abandon the check without finishing it.
+- **Pass:** In a 2-week 50/50 pilot on child applications, the treatment arm (check shown) beats the control arm (no check) on first-submission acceptance by at least 8 points, intent-to-treat — everyone assigned to treatment, not only those who used it. Among parents who actually used the check, the per-user rise is from ~74% to at least 85%. (74% is made up.)
+- **Fail:** Intent-to-treat gain over control is under 5 points, or more than 15% of parents abandon the check without finishing it. A gain of 5–8 points is a watch band: look at catch rate and fix rate before deciding.
 - **Note on attribution:** the per-user 85% over-credits the check, because diligent parents self-select into using it. Intent-to-treat (whole arm vs whole arm) is the honest, unbiased number and is the one the Pass/Fail line turns on. The per-user figure is reported alongside, not instead.
 
 ### 6. Explore
@@ -64,4 +64,4 @@ I'm testing whether a short, situation-specific checklist shown before Submit ca
 - Risk type: Feasibility · Will the logic actually work? (With a close second in Usability: will parents who skip guidance act on a flag?)
 - Kill switch: Most child returns must be caused by missing or wrong document types (which a checklist can catch), not by document quality problems like photos (which it cannot). If the split is the other way, the whole approach fails.
 - Kill-switch signal: Run the checklist against 200 synthetic returned child applications by 1 Dec 2026. If it flags the actual return reason in fewer than 40% of cases, stop and pivot. Below 40%, the 85% target cannot be reached. Caveat: these 200 cases are self-authored, so this tests the checklist against our own assumed reason mix, not against real returns — the real reason distribution must be validated against ICA return codes before any wider rollout.
-- Success signal: The checklist flags the real return reason in at least 50% of the 200 test cases by 1 Dec 2026. Then a live pilot lifts first-submission acceptance — among parents who use the check, measured over a 50/50 control arm — from 74% to at least 85% by 12 Jan 2027.
+- Success signal: The checklist flags the real return reason in at least 50% of the 200 test cases by 1 Dec 2026. Then, by 12 Jan 2027, a 50/50 live pilot shows an intent-to-treat gain of at least 8 points over control, with the per-user rise (74% to at least 85% among parents who use the check) reported alongside.

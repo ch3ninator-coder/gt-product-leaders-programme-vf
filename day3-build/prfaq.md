@@ -14,7 +14,7 @@
 
 **The problem.** Applications for children under 16 are a quarter of passport volume but nearly 40% of all returns. One in four comes back. The most common reason is missing consent from the second parent — though the check can only confirm that a consent document is present, never that the consent is valid; that stays with an officer. Parents are not careless. The guidance covers every possible case on one long page, and a parent cannot tell which parts apply to them. They find out what "complete" meant only when an officer returns the form.
 
-**The solution.** Passport Ready Check asks: renewal or first passport? Is the child a citizen? Are both parents able to consent? Is anyone overseas? It then shows only the rules for that situation, each with a date stamp. It never opens or reads the documents. It never says an application will be approved. Officers still make every decision. If a case is unusual, such as a parent who is overseas or a custody order, the check says so and points the parent to an officer instead of guessing.
+**The solution.** Passport Ready Check asks: renewal or first passport? Is the child a citizen? Are both parents able to consent? Is either parent overseas? It then shows only the rules for that situation, each with a date stamp. It never opens or reads the documents. It never says an application will be approved. Officers still make every decision. If a case is unusual, such as a parent who is overseas or a custody order, the check says so and points the parent to an officer instead of guessing.
 
 > "We moved the moment of truth. Parents used to learn the rules from a return notice. Now they learn them before they press Submit." (ICA spokesperson, made up)
 
