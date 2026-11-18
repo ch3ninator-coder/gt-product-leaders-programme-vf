@@ -27,7 +27,13 @@ The flow and its trust design are in `day1-discover-define/ai-ux-flow.md`. In sh
 
 ## Risks (market, technical, team)
 
-*To be completed in Day 2*
+All numbers are made up. The dry-run result is in `day2-validate/build-log.md`.
+
+| Risk | What could go wrong | How we will test it |
+|---|---|---|
+| **Market:** parents skip it | Parents who spend 40 seconds on the guidance (made up) treat the check as one more hurdle and press "Submit anyway". A check nobody uses prevents nothing. | Five-person test on `prototype/index-lean.html`: pass if 4 of 5 name the next step within 10 seconds and nobody reads it as approval. In the pilot, stop if more than 15% of parents leave the check without finishing. |
+| **Technical:** the checklist catches too little | The dry run caught 101 of 200 made-up returns (50.5%), just over the 50% continue line. If real returns have fewer document problems, or more parents tick documents they don't have, the catch rate falls below 40% and the check can't reach the target. | Ask ICA for child returns by reason, as totals with no personal data, and re-run `prototype/dry-run.html` against that mix. Stop below 40%. Its sliders already show that a document share of about 45% drops it into the watch band. |
+| **Team:** nobody keeps the rules current | The check is only right while every rule matches published ICA guidance. If no one at ICA owns the rules, they go stale, the check hides itself, and parents fall back to the long page. | Before the pilot, ICA names a rules owner, as a role (`day2-validate/context-skill.md`). Then run one practice rule change: the owner updates and re-dates a rule, and the five test questions in the context skill still pass within 2 working days (made-up target). |
 
 ## Build plan and handoff
 
