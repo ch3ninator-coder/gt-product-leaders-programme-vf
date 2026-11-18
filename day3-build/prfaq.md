@@ -14,7 +14,7 @@
 
 **The problem.** Applications for children under 16 are a quarter of passport volume but nearly 40% of all returns. One in four comes back. The most common reason is missing consent from the second parent — though the check can only confirm that a consent document is present, never that the consent is valid; that stays with an officer. Parents are not careless. The guidance covers every possible case on one long page, and a parent cannot tell which parts apply to them. They find out what "complete" meant only when an officer returns the form.
 
-**The solution.** Passport Ready Check asks: renewal or first passport? Is the child a citizen? Are both parents able to consent? Is either parent overseas? It then shows only the rules for that situation, each with a date stamp. It never opens or reads the documents. It never says an application will be approved. Officers still make every decision. If a case is unusual, such as a parent who is overseas or a custody order, the check says so and points the parent to an officer instead of guessing.
+**The solution.** Passport Ready Check asks: renewal or first passport? Is the child a citizen? Are both parents able to consent? Is either parent overseas? It then shows only what that situation needs, and each requirement is backed by a dated rule the parent can open. It never opens or reads the documents. It never says an application will be approved. Officers still make every decision. If a case is unusual, such as a parent who is overseas or a custody order, the check says so and points the parent to an officer instead of guessing.
 
 > "We moved the moment of truth. Parents used to learn the rules from a return notice. Now they learn them before they press Submit." (ICA spokesperson, made up)
 
@@ -39,7 +39,7 @@ The check tells you it can't help with your case and shows you how to reach an o
 Not at launch. It reminds you of the photo rules, but it cannot check the photo itself.
 
 **How do I know the rules are current?**
-Every screen shows "Rules as of [date]". When ICA changes a rule, the check is updated and re-dated.
+Tap "What we checked" on any result to see "Rules as of [date]". When ICA changes a rule, the check is updated and re-dated.
 
 ---
 
@@ -129,4 +129,4 @@ Note too that the pilot runs inside the current vendor channel, which withdraws 
 - **Reason-mix assumption:** the 56% catchable figure is our estimate. If real returns are mostly photo quality, the whole lever is wrong (see §8). Validate against real return codes before scaling.
 - **Consent can be ticked but not verified:** a parent can mark "I have consent" when the consent is invalid. The check never gives a confident all-clear on consent for this reason; the value there is reminding, not confirming. The false-all-clear metric watches this.
 - **Edge cases:** the hand-off to officers must work from day one, or parents with unusual cases get stuck.
-- **False confidence:** parents may read "ready" as "approved". Every screen says officers decide.
+- **False confidence:** parents may read "ready" as "approved". Every result says once, in one line, that an officer decides.

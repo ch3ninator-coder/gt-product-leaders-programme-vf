@@ -25,10 +25,10 @@ Up to four short questions, one at a time: renewal or first passport, child a ci
 
 1. **Trigger:** the parent reaches the review step and the application is for a child under 16. The check opens automatically; it is not something they must find.
    - Trust gap: **yes** — a parent may fear this is a new hurdle or that it judges them. The opening line says it is a free check that works for them, not a gate.
-2. **AI step:** the four answers place the parent in one situation and the matching checklist appears, showing only what their case needs with each item dated.
+2. **AI step:** the four answers place the parent in one situation and the matching checklist appears, showing only what their case needs. Every item has a dated rule behind it, one tap away rather than printed on screen.
    - Trust gap: **yes** — if it shows the wrong situation's list, the parent is misled. Each answer is echoed back at the top of the list so a wrong turn is obvious and editable.
 3. **Human check:** the parent ticks what they have. The parent — not the AI — decides whether each item is truly met; the AI only lists what is required.
-   - Trust gap: **yes** — a parent could read "all ticked" as "approved". Every screen repeats that officers decide and that the check never reads the documents.
+   - Trust gap: **yes** — a parent could read "all ticked" as "approved". Every result says once, in one line, that an officer decides. That the check reads no documents is one tap away, so it is always available without crowding the screen.
 4. **Outcome:** a one-screen summary of what is still missing, with the exact next action ("upload the second parent's consent"), or "Looks complete: Yes, for the items below", with second-parent consent still listed for an officer to confirm. It never says "you have everything".
    - Trust gap: **yes** — a false "all clear" would be worse than no check. The outcome states its own limits: it checks document *types*, not photo quality or officer judgment.
 
@@ -83,11 +83,11 @@ If the answers do not map cleanly to a known situation, or the parent flags an e
 ### Levels
 
 - Level 01 · Trigger Accuracy: **met** — the check opens by itself whenever the application is for a child under 16, so the parent never has to find or ask for it; false triggers are near zero because the trigger is a simple application attribute, not a guess.
-- Level 02 · System Transparency: **met** — each screen echoes the four answers back, shows only the rules for that situation, dates every item, and repeats that it reads no documents and that officers decide; the parent can always see why an item is listed.
+- Level 02 · System Transparency: **met** — each result shows only the rules for that situation and says once that officers decide. The parent's answers, the dated rule behind each item and the fact that it reads no documents sit one tap away under "What we checked", so the parent can always see why an item is listed without that detail crowding the next action.
 - Level 03 · Invisible Integration: **not met** — the check is still a visible step the parent works through. To reach Level 3 it would fade into the form itself, surfacing only the one thing that is wrong at the moment it becomes wrong, with no separate check to complete. This is the roadmap target, not v1.
 
 ### Trust gaps
 
-- Black box: the parent can always see the situation the check placed them in and the dated rule behind each item; nothing is asserted without its source, and a wrong situation match is visible and editable at the top of the list.
+- Black box: the parent can always reach the situation the check placed them in and the dated rule behind each item; nothing is asserted without its source, and a one-line summary of the situation with a Change link sits at the top so a wrong match is easy to spot and fix.
 - Hallucination: the check never invents a rule — every item traces to current published ICA guidance with a date stamp, and if the rules are stale or unreachable the check hides itself rather than show a confident wrong answer.
 - Control: the parent, not the AI, ticks what they have and can close the check and submit anyway; the AI lists what is required and decides nothing, and all final decisions stay with ICA officers.
