@@ -1,0 +1,201 @@
+case_id,situation,citizen,both_can_consent,parent_overseas,ticked_current_passport,ticked_birth_certificate,ticked_parent_id,ticked_photo,ticked_consent,return_reason,return_item,note,data
+R-001,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-002,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-003,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-004,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-005,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-006,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-007,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-008,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-009,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-010,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-011,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-012,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-013,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-014,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-015,first,yes,yes,no,n/a,yes,yes,yes,yes,consent,consent,consent ticked but never given,made up
+R-016,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-017,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-018,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-019,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-020,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-021,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-022,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,the fee was not paid,made up
+R-023,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-024,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-025,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-026,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-027,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-028,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-029,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-030,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-031,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-032,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-033,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,consent,consent,consent ticked but never given,made up
+R-034,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-035,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-036,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-037,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-038,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-039,first,yes,yes,no,n/a,yes,yes,yes,yes,document,birth_certificate,document ticked but the wrong one uploaded,made up
+R-040,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-041,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-042,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,document,current_passport,document ticked but the wrong one uploaded,made up
+R-043,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-044,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-045,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-046,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-047,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-048,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-049,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,consent,consent,consent ticked but never given,made up
+R-050,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-051,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-052,first,yes,yes,no,n/a,yes,yes,yes,yes,consent,consent,consent ticked but never given,made up
+R-053,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-054,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-055,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-056,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-057,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-058,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-059,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-060,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-061,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-062,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-063,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-064,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-065,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-066,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-067,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-068,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-069,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-070,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-071,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-072,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-073,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,a form detail was wrong,made up
+R-074,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-075,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-076,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-077,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,an address did not match,made up
+R-078,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-079,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-080,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-081,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-082,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-083,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-084,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-085,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-086,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-087,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-088,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-089,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-090,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,document,current_passport,document ticked but the wrong one uploaded,made up
+R-091,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-092,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-093,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-094,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-095,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-096,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-097,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-098,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-099,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-100,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-101,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-102,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-103,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-104,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-105,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-106,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-107,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,an address did not match,made up
+R-108,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-109,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-110,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-111,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,a form detail was wrong,made up
+R-112,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,a form detail was wrong,made up
+R-113,first,yes,yes,no,n/a,no,yes,yes,yes,document,birth_certificate,document missing,made up
+R-114,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-115,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-116,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-117,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-118,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-119,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-120,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-121,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-122,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,an address did not match,made up
+R-123,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-124,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-125,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-126,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-127,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-128,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-129,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-130,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-131,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-132,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-133,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-134,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-135,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-136,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-137,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-138,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-139,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-140,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-141,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-142,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-143,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-144,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-145,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-146,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-147,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-148,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,document,current_passport,document ticked but the wrong one uploaded,made up
+R-149,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-150,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-151,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-152,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-153,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-154,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-155,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-156,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-157,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-158,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-159,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-160,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-161,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-162,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-163,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-164,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-165,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,the fee was not paid,made up
+R-166,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-167,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-168,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-169,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up
+R-170,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-171,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-172,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,an address did not match,made up
+R-173,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-174,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-175,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-176,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,consent,consent,consent ticked but never given,made up
+R-177,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-178,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-179,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-180,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-181,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-182,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-183,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-184,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-185,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,the fee was not paid,made up
+R-186,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,the fee was not paid,made up
+R-187,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,consent,consent,consent ticked but never given,made up
+R-188,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,other,other,a form detail was wrong,made up
+R-189,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-190,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,consent,consent,consent ticked but never given,made up
+R-191,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-192,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-193,first,yes,yes,no,n/a,yes,no,yes,yes,document,parent_id,document missing,made up
+R-194,renewal,yes,yes,no,no,n/a,n/a,yes,yes,document,current_passport,document missing,made up
+R-195,renewal,yes,yes,no,yes,n/a,n/a,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-196,first,yes,yes,no,n/a,yes,yes,yes,yes,other,other,a form detail was wrong,made up
+R-197,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-198,renewal,yes,yes,no,yes,n/a,n/a,yes,no,consent,consent,consent not given,made up
+R-199,first,yes,yes,no,n/a,yes,yes,yes,yes,photo,photo,photo uploaded but did not meet the rules,made up
+R-200,first,yes,yes,no,n/a,yes,yes,yes,no,consent,consent,consent not given,made up

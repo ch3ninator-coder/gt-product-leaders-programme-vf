@@ -111,7 +111,9 @@ Rules as of [date] (made up).
 
 **Stale rules.** Each rule has a made-up "as of" date. The freshness window is 30 days (made up). **Simulate stale rules** pushes the date past the window. The check then hides and shows only: "This check is unavailable right now. Please use the standard guidance (made-up link)." This is the fallback in `ai-ux-flow.md`: silence is safer than a confident wrong answer.
 
-**Dry run.** The feasibility test runs first as a spreadsheet (section 1), because that is cheapest. Once the full flow is built, **Run dry run** puts the same 200 made-up cases through the rule function the parent sees and prints the catch rate. This only confirms the built rules match the spreadsheet. It adds no new evidence about real returns.
+**Dry run, built.** `dry-run.html` runs 200 made-up cases from `sample-returns.csv` through the checklist rules and shows the catch rate against the 40% and 50% lines. `make-sample-returns.py` writes both from one set of made-up numbers. The first result, 50.5%, is in `day2-validate/build-log.md`.
+
+The feasibility test runs first as a spreadsheet (section 1), because that is cheapest. Once the full flow is built, **Run dry run** puts the same 200 made-up cases through the rule function the parent sees and prints the catch rate. This only confirms the built rules match the spreadsheet. It adds no new evidence about real returns.
 
 - Each made-up case holds the four answers, the document types ticked (including false ticks, where consent is ticked but invalid) and its assigned return reason.
 - **Catch rule:** a case counts as caught only if its return reason appears as a "Still needed" item, or as a hard stop for that reason.
