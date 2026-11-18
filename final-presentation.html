@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Passport Ready Check — final presentation (synthetic data only)</title>
+<!--
+  GovTech Product Leaders Programme. Scenario B, ICA passport applications.
+  A self-contained slide deck. Every person, case and number is made up unless
+  marked "course brief". Not a real ICA service.
+  Keys: arrow keys or space to move, F for full screen, O for an overview.
+-->
+<link rel="stylesheet" href="assets/fonts/ps-fonts.css">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #e6eeea; --paper-2: #f5f8f7; --ink: #102a27; --ink-2: #46574f; --rule: #c3d2cc;
+    --check: #2846b8; --stamp: #b42339; --go: #0f6e5a; --warn: #a86a00;
+    --sans: "Saans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "Antarctican Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font-family: var(--sans); color: var(--ink); background: #0c1a18; overflow: hidden; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--check); outline-offset: 2px; }
+
+  .stage { position: fixed; inset: 0; display: grid; place-items: center; padding: 3vh 3vw; }
+  .slide {
+    position: relative;
+    width: min(1120px, 94vw); height: min(680px, 88vh);
+    background: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='60' viewBox='0 0 240 60'%3E%3Cg fill='none' stroke='%23102a27' stroke-opacity='0.045' stroke-width='1'%3E%3Cpath d='M0 30 C 30 10, 90 10, 120 30 S 210 50, 240 30'/%3E%3Cpath d='M0 38 C 30 18, 90 18, 120 38 S 210 58, 240 38'/%3E%3Cpath d='M0 22 C 30 2, 90 2, 120 22 S 210 42, 240 22'/%3E%3C/g%3E%3C/svg%3E");
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    padding: clamp(1.5rem, 4vw, 3.2rem);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.on { display: flex; }
+  .eyebrow { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.04em; color: var(--ink-2); margin-bottom: 0.9rem; display: flex; justify-content: space-between; }
+  .slide h2 { font-size: clamp(1.5rem, 3.4vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 1rem; font-weight: 800; max-width: 20ch; }
+  .slide p { font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.5; margin: 0 0 0.8rem; max-width: 62ch; }
+  .slide .lede { font-size: clamp(1.1rem, 1.9vw, 1.35rem); color: var(--ink-2); }
+  .fill { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .foot { font-size: 0.78rem; color: var(--ink-2); margin-top: auto; padding-top: 0.8rem; }
+
+  /* Title */
+  .title { justify-content: center; }
+  .title h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.02; letter-spacing: -0.03em; margin: 0 0 0.6rem; font-weight: 800; }
+  .title .sub { font-size: clamp(1.1rem, 2vw, 1.5rem); color: var(--ink-2); max-width: 40ch; }
+  .title .meta { margin-top: 2rem; font-family: var(--mono); font-size: 0.85rem; color: var(--ink-2); }
+
+  /* Stats row */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .stats div { border-top: 3px solid var(--ink); padding-top: 0.6rem; }
+  .stats b { display: block; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+  .stats span { display: block; font-size: 0.95rem; margin-top: 0.3rem; }
+  .stats em { display: block; font-style: normal; font-size: 0.72rem; color: var(--ink-2); margin-top: 0.3rem; }
+
+  /* Two columns */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.4rem; align-items: start; }
+  .cols h3 { font-size: 1rem; margin: 0 0 0.4rem; }
+  .cols p { font-size: 1rem; margin: 0; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-2); }
+
+  /* Before / after */
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: center; }
+  .ba .card { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: 1.1rem 1.2rem; }
+  .ba .card.bad { border-color: #e2b4bc; }
+  .ba .card.good { border-color: #a9d6c4; }
+  .ba h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+  .ba .big { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; }
+  .ba .big.bad { color: var(--stamp); } .ba .big.good { color: var(--go); }
+  .ba ul { margin: 0.5rem 0 0; padding-left: 1.1rem; font-size: 0.92rem; }
+  .ba li { margin: 0.2rem 0; }
+  .ba .arrow { font-size: 2rem; color: var(--ink-2); }
+
+  /* Gauge for the dry run */
+  .gauge { margin: 1.4rem 0; }
+  .track { position: relative; height: 18px; border-radius: 9px; overflow: hidden; display: flex; }
+  .track i { height: 100%; }
+  .track .k { width: 40%; background: #f0cdd3; } .track .w { width: 10%; background: #f2e0ba; } .track .g { width: 50%; background: #cfe7de; }
+  .pin { position: absolute; top: -6px; width: 4px; height: 30px; background: var(--ink); border-radius: 2px; transform: translateX(-50%); }
+  .pin b { position: absolute; top: -1.7rem; left: 50%; transform: translateX(-50%); font-size: 1.1rem; white-space: nowrap; }
+  .ticks { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem; color: var(--ink-2); margin-top: 1.9rem; }
+  .ticks span.kline { color: var(--stamp); } .ticks span.gline { color: var(--go); }
+
+  /* Risk / next lists */
+  .rows { display: flex; flex-direction: column; gap: 0.7rem; }
+  .row { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; border-top: 1px solid var(--rule); padding-top: 0.6rem; }
+  .row b { font-size: 0.95rem; }
+  .row span { font-size: 0.98rem; }
+  .row .how { color: var(--ink-2); font-size: 0.9rem; display: block; margin-top: 0.15rem; }
+  .status { display: grid; grid-template-columns: 6rem 1fr; gap: 1rem; align-items: baseline; border-top: 1px solid var(--rule); padding: 0.55rem 0; }
+  .status .d { font-family: var(--mono); font-size: 0.82rem; }
+  .status .done { color: var(--go); } .status .todo { color: var(--ink-2); }
+
+  /* Chrome */
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,0.12); }
+  .bar i { display: block; height: 100%; background: #fff; transition: width 0.25s; }
+  .nav { position: fixed; bottom: 14px; right: 18px; display: flex; gap: 0.4rem; align-items: center; z-index: 5; }
+  .nav button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; font-size: 1.1rem; }
+  .nav .count { color: rgba(255,255,255,0.75); font-family: var(--mono); font-size: 0.8rem; min-width: 3.2rem; text-align: center; }
+  .hint { position: fixed; bottom: 16px; left: 18px; color: rgba(255,255,255,0.5); font-size: 0.78rem; z-index: 5; }
+
+  /* Overview grid */
+  .overview { position: fixed; inset: 0; background: #0c1a18; padding: 3vh 3vw; overflow: auto; display: none; z-index: 20; }
+  .overview.on { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; align-content: start; }
+  .thumb { background: var(--paper); border-radius: 8px; border: 2px solid transparent; padding: 0.9rem; cursor: pointer; min-height: 120px; text-align: left; }
+  .thumb:hover, .thumb:focus-visible { border-color: #fff; }
+  .thumb .n { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-2); }
+  .thumb .t { font-size: 0.95rem; font-weight: 700; margin-top: 0.3rem; line-height: 1.2; }
+
+  @media (max-width: 760px) {
+    .cols, .ba, .stats { grid-template-columns: 1fr; }
+    .ba .arrow { transform: rotate(90deg); justify-self: center; }
+    .row, .status { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage"></div>
+
+<div class="overview" id="overview" aria-label="All slides"></div>
+
+<div class="bar"><i id="bar"></i></div>
+<div class="hint" id="hint">← → move · O overview · F full screen</div>
+<div class="nav">
+  <button type="button" id="prev" aria-label="Previous slide">‹</button>
+  <span class="count" id="count"></span>
+  <button type="button" id="next" aria-label="Next slide">›</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SLIDES = [
+    { title: true, html:
+      '<div class="fill">' +
+        '<h1>Passport Ready Check</h1>' +
+        '<p class="sub">Catch what\'s missing from a child\'s passport application before Submit, not six days after.</p>' +
+        '<div class="meta">GovTech Product Leaders Programme · Scenario B · ICA passport applications<br>Synthetic data only. Not a real ICA service.</div>' +
+      '</div>' },
+
+    { eyebrow: "The problem", title2: "Parents learn what “complete” means too late",
+      html:
+      '<div class="fill">' +
+        '<p class="lede">A parent renews a child’s passport online, presses Submit, and finds out days later that something was missing. The guidance is one long page for every case, so few read it, and none of it says what <em>their</em> case needs.</p>' +
+        '<div class="stats" style="margin-top:1.4rem">' +
+          '<div><b>26%</b><span>of child applications come back</span><em>made up</em></div>' +
+          '<div><b>6 days</b><span>added by each return</span><em>course brief</em></div>' +
+          '<div><b>38%</b><span>of applicants read the guidance</span><em>course brief</em></div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="foot">The most common reason a child’s application comes back is missing consent from the second parent (made up).</p>' },
+
+    { eyebrow: "Why it matters now", title2: "The online channel closes in 10 weeks",
+      html:
+      '<div class="fill"><div class="cols">' +
+        '<div><h3>The deadline is fixed</h3><p>The vendor running the online channel withdraws on a date that will not move (course brief). The replacement can’t launch with a backlog of avoidable returns.</p></div>' +
+        '<div><h3>Counters can’t absorb it</h3><p>Walk-in counters cover only about 35% of online demand (course brief). Every avoidable return pushes a family toward a counter that can’t take them.</p></div>' +
+        '<div><h3>Who it’s for</h3><p>Parents renewing a passport for a Singapore citizen child under 16 — named in the brief as the most confused group.</p></div>' +
+        '<div><h3>The opportunity</h3><p>Most returns are rule-based (missing consent, wrong document). Those are preventable <em>before</em> Submit, if the parent is told what their case needs.</p></div>' +
+      '</div></div>' },
+
+    { eyebrow: "The idea", title2: "A check before Submit, not a gate",
+      html:
+      '<div class="fill">' +
+        '<p class="lede">The parent answers up to four questions about their situation. The check shows only what their case needs and what’s still missing, with the exact next step. Then they decide.</p>' +
+        '<div class="cols" style="margin-top:1.2rem">' +
+          '<div><h3>What it does</h3><p>Opens by itself for a child under 16. Shows one thing to fix. Hands edge cases to an officer.</p></div>' +
+          '<div><h3>What it never does</h3><p>Never reads documents. Never says “approved.” Never decides — an ICA officer always does.</p></div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="foot">See it run: <span class="tag">day2-validate/prototype/demo.html</span></p>' },
+
+    { eyebrow: "The bet", title2: "Our riskiest assumption",
+      html:
+      '<div class="fill">' +
+        '<p class="lede">Most child returns are caused by a missing or wrong <em>document type</em>, which a checklist can catch — not by photo or form problems it can’t see.</p>' +
+        '<div class="cols" style="margin-top:1.2rem">' +
+          '<div><h3>Risk type</h3><p>Feasibility. Will the logic actually work?</p></div>' +
+          '<div><h3>Why test it first</h3><p>If it’s wrong, the check is the wrong product however well it’s designed. So we tested it before building anything real.</p></div>' +
+          '<div><h3>Kill switch</h3><p>Catch rate under 40% of returns → stop and pivot.</p></div>' +
+          '<div><h3>Success signal</h3><p>50% or more by 1 Dec 2026 → continue to a user test.</p></div>' +
+        '</div>' +
+      '</div>' },
+
+    { eyebrow: "The cheap test", title2: "Dry run: 200 made-up returns",
+      html:
+      '<div class="fill">' +
+        '<p>We ran 200 made-up returned applications through the same checklist rules the parent sees, and counted how many it would have flagged before Submit.</p>' +
+        '<div class="gauge">' +
+          '<div class="track"><i class="k"></i><i class="w"></i><i class="g"></i>' +
+            '<span class="pin" style="left:50.5%"><b>50.5%</b></span></div>' +
+          '<div class="ticks"><span>0%</span><span class="kline">40% stop</span><span class="gline">50% continue</span><span>100%</span></div>' +
+        '</div>' +
+        '<p><b>101 of 200 caught.</b> It caught most consent and document gaps. It missed every photo and “other” return, and the cases where a parent ticked a document they didn’t really have. Just over the line, so the real return data matters.</p>' +
+      '</div>' +
+      '<p class="foot">Try the sliders: <span class="tag">day2-validate/prototype/dry-run.html</span> · All 200 cases are made up.</p>' },
+
+    { eyebrow: "Risks", title2: "What could sink it, and how we test each",
+      html:
+      '<div class="fill"><div class="rows">' +
+        '<div class="row"><b>Market</b><span>Parents skip the check and press “Submit anyway.”<span class="how">Test: five-person test on the lean screen; stop in the pilot if over 15% abandon it.</span></span></div>' +
+        '<div class="row"><b>Technical</b><span>The checklist catches too little; 50.5% is barely over the line.<span class="how">Test: re-run the dry run on ICA’s real return totals; stop below 40%.</span></span></div>' +
+        '<div class="row"><b>Team</b><span>Nobody keeps the rules current, so the check goes stale.<span class="how">Test: ICA names a rules owner; run one practice rule change that still passes the five test questions.</span></span></div>' +
+      '</div></div>' +
+      '<p class="foot">Full framing in <span class="tag">one-pager.md</span></p>' },
+
+    { eyebrow: "The honest limit", title2: "What this can’t prove yet",
+      html:
+      '<div class="fill">' +
+        '<p class="lede">We wrote the 200 cases ourselves, with the reason mix we assumed. So the dry run shows the rules work and how close we are to the line. It can’t prove real child returns are mostly document problems.</p>' +
+        '<p>The real test is ICA’s own count of child returns by reason — totals only, no personal data. If documents are below about 45% of returns, the check can’t reach 50%, and the idea should pivot to a photo check or an officer-side tool.</p>' +
+      '</div>' +
+      '<p class="foot">This limit is written into <span class="tag">day2-validate/build-log.md</span> so it isn’t forgotten.</p>' },
+
+    { eyebrow: "Where this is", title2: "Done, and still to come",
+      html:
+      '<div class="fill">' +
+        '<div class="status"><span class="d done">Day 1</span><span>Problem, user, success metric, the check’s flow and its trust rules. <span style="color:var(--go)">Done.</span></span></div>' +
+        '<div class="status"><span class="d done">Day 2</span><span>Prototype, guided walkthrough, riskiest-assumption dry run (50.5%), risks, context skill. <span style="color:var(--go)">Done.</span></span></div>' +
+        '<div class="status"><span class="d todo">Day 3</span><span>Agent spec, control panel, AI PRD, strategy and roadmap. <span style="color:var(--ink-2)">Next.</span></span></div>' +
+        '<div class="status"><span class="d todo">Day 4</span><span>Metrics plan, eval gates, and the continue / pivot / stop call. <span style="color:var(--ink-2)">Next.</span></span></div>' +
+      '</div>' },
+
+    { eyebrow: "The ask", title2: "Continue, with one thing to get",
+      html:
+      '<div class="fill">' +
+        '<p class="lede">The dry run cleared the line, so the recommendation is to continue — to the five-person user test and then a small pilot.</p>' +
+        '<p>The one thing that would change the call: ICA’s real count of child returns by reason. It’s cheap to get and it’s the only thing that can truly confirm or kill the bet. Everything else is ready to move.</p>' +
+      '</div>' +
+      '<p class="foot">Thank you. Questions welcome. All figures in this deck are synthetic and labelled.</p>' }
+  ];
+
+  var stage = document.getElementById("stage");
+  var overview = document.getElementById("overview");
+  var cur = 0;
+
+  SLIDES.forEach(function (s, i) {
+    var d = document.createElement("section");
+    d.className = "slide" + (s.title ? " title" : "");
+    var head = s.title ? "" :
+      '<div class="eyebrow"><span>' + s.eyebrow + '</span><span>' + (i + 1) + " / " + SLIDES.length + '</span></div>' +
+      (s.title2 ? '<h2>' + s.title2 + '</h2>' : "");
+    d.innerHTML = head + s.html;
+    stage.appendChild(d);
+
+    var th = document.createElement("button");
+    th.type = "button";
+    th.className = "thumb";
+    th.innerHTML = '<div class="n">' + (i + 1) + '</div><div class="t">' + (s.title ? "Passport Ready Check" : s.title2) + '</div>';
+    th.addEventListener("click", function () { go(i); closeOverview(); });
+    overview.appendChild(th);
+  });
+
+  var slides = stage.querySelectorAll(".slide");
+
+  function go(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (el, k) { el.classList.toggle("on", k === cur); });
+    document.getElementById("bar").style.width = ((cur + 1) / slides.length * 100) + "%";
+    document.getElementById("count").textContent = (cur + 1) + " / " + slides.length;
+    document.getElementById("prev").disabled = cur === 0;
+    document.getElementById("next").disabled = cur === slides.length - 1;
+    try { history.replaceState(null, "", "#" + (cur + 1)); } catch (e) {}
+  }
+  function openOverview() { overview.classList.add("on"); }
+  function closeOverview() { overview.classList.remove("on"); }
+
+  document.getElementById("prev").addEventListener("click", function () { go(cur - 1); });
+  document.getElementById("next").addEventListener("click", function () { go(cur + 1); });
+
+  document.addEventListener("keydown", function (e) {
+    if (overview.classList.contains("on")) { if (e.key === "Escape" || e.key.toLowerCase() === "o") closeOverview(); return; }
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); go(cur + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(cur - 1); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(slides.length - 1);
+    else if (e.key.toLowerCase() === "o") openOverview();
+    else if (e.key.toLowerCase() === "f") {
+      if (!document.fullscreenElement) { (document.documentElement.requestFullscreen || function () {}).call(document.documentElement); }
+      else document.exitFullscreen();
+    }
+  });
+
+  // Swipe on touch
+  var x0 = null;
+  stage.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener("touchend", function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  var start = parseInt((location.hash.match(/#(\d+)/) || [])[1], 10);
+  go(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
