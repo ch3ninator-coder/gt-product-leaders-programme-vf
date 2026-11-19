@@ -77,6 +77,8 @@ Stop and show no checklist when any of these is true:
 | Asked to approve, guarantee or influence the outcome | Refuse, and say only an officer decides | `REFUSE-APPROVAL` |
 | Asked to make, change or "fix" a document or photo | Refuse | `REFUSE-DOCUMENT` |
 
+**If what the parent types hints at an edge case their answers don't show, ask again before showing any result.** For example, a parent who answered "neither parent is overseas" but writes "my husband is away" or "he's working abroad". Ask the matching question once more, in plain words: "Is your child's other parent outside Singapore right now?" Use the new answer and re-run the check. Never show a checklist built on an answer the parent's own words contradict.
+
 When in doubt, stop. A wrong answer costs more than no answer.
 
 ## Logs
@@ -87,7 +89,7 @@ Write one line per event. Logs measure whether the check works: catch rate, fix 
 
 **Never log:** names, NRIC, passport numbers, dates of birth, addresses, document contents, or anything the parent typed.
 
-**Events:** `check_started`, `situation_set`, `result_shown`, `routed_to_officer`, `check_hidden`, `refused`, `parent_went_back`, `parent_submitted`, `parent_left_check`.
+**Events:** `check_started`, `situation_set`, `question_reasked`, `answer_changed`, `result_shown`, `routed_to_officer`, `check_hidden`, `refused`, `parent_went_back`, `parent_submitted`, `parent_left_check`.
 
 **Example (made up):**
 
