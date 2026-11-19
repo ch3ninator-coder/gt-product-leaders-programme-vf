@@ -72,7 +72,7 @@ whether your documents are valid. ICA officers make the final decision.
 Rules as of 1 Nov 2026 (made up).
 ```
 
-- **Observe:** about 70 words. No "approved", "ready" or "you have everything".
+- **Observe:** about 80 words. No "approved", "ready" or "you have everything".
 - **Check:** right format, under 300 words, ends with the officer line and the date. Done.
 
 **Outcome: complete.** The check found nothing missing and left consent for an officer.
